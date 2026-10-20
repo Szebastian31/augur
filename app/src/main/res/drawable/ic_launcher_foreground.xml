@@ -1,21 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- zodiac ring, the augur's curled staff (lituus) and a guiding star from icons/icon.svg (64 grid),
+<!-- the glass disc, agreement ring (three of four lit), sign dots and guiding star from icons/icon.svg,
      scaled into the adaptive-icon safe zone -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
     android:width="108dp"
     android:height="108dp"
-    android:viewportWidth="108"
-    android:viewportHeight="108">
-    <group android:scaleX="1.1" android:scaleY="1.1" android:translateX="18.8" android:translateY="18.8">
-        <path android:strokeColor="#73E8C77A" android:strokeWidth="1.4"
-            android:pathData="M10,32a22,22 0,1 0,44 0a22,22 0,1 0,-44 0z" />
-        <path android:strokeColor="#33E8C77A" android:strokeWidth="1"
-            android:pathData="M14,32a18,18 0,1 0,36 0a18,18 0,1 0,-36 0z" />
-        <path android:strokeColor="#FFE8C77A" android:strokeWidth="2.4" android:strokeLineCap="round"
-            android:pathData="M28,48L28,24Q28,15 36,15Q42,15 42,21Q42,26 37,26Q33,26 33,22" />
-        <path android:fillColor="#FFFFFFFF"
-            android:pathData="M43,33L44.3,37.7L49,39L44.3,40.3L43,45L41.7,40.3L37,39L41.7,37.7Z" />
-        <path android:fillColor="#CCFFFFFF" android:pathData="M18.8,20a1.2,1.2 0,1 0,2.4 0a1.2,1.2 0,1 0,-2.4 0z" />
-        <path android:fillColor="#B3E8C77A" android:pathData="M20,44a1,1 0,1 0,2 0a1,1 0,1 0,-2 0z" />
+    android:viewportWidth="1024"
+    android:viewportHeight="1024">
+    <group android:scaleX="0.86" android:scaleY="0.86" android:translateX="71.7" android:translateY="107.8">
+        <path android:fillColor="#2EFFFFFF" android:strokeColor="#99FFFFFF" android:strokeWidth="5"
+            android:pathData="M222,470a290,290 0,1 0,580 0a290,290 0,1 0,-580 0z" />
+        <path android:strokeColor="#1AFFFFFF" android:strokeWidth="26"
+            android:pathData="M172,470a340,340 0,1 0,680 0a340,340 0,1 0,-680 0z" />
+        <path android:strokeWidth="26" android:strokeLineCap="round"
+            android:pathData="M546.95,131.8A340,340 0,0 1,850.2,435.05M850.2,504.95A340,340 0,0 1,546.95,808.2M477.05,808.2A340,340 0,0 1,173.8,504.95">
+            <aapt:attr name="android:strokeColor">
+                <gradient android:type="linear" android:startX="172" android:startY="130" android:endX="852" android:endY="810">
+                    <item android:offset="0" android:color="#FFFFE2C4" />
+                    <item android:offset="1" android:color="#FFFF9A78" />
+                </gradient>
+            </aapt:attr>
+        </path>
+        <path android:strokeColor="#33FFFFFF" android:strokeWidth="26" android:strokeLineCap="round"
+            android:pathData="M173.8,435.05A340,340 0,0 1,477.05,131.8" />
+        <path android:fillColor="#D9FFFFFF"
+            android:pathData="M503,242a9,9 0,1 0,18 0a9,9 0,1 0,-18 0zM731,470a9,9 0,1 0,18 0a9,9 0,1 0,-18 0zM503,698a9,9 0,1 0,18 0a9,9 0,1 0,-18 0zM275,470a9,9 0,1 0,18 0a9,9 0,1 0,-18 0z" />
+        <path android:fillColor="#80FFFFFF"
+            android:pathData="M620,272.5a6,6 0,1 0,12 0a6,6 0,1 0,-12 0zM703.5,356a6,6 0,1 0,12 0a6,6 0,1 0,-12 0zM703.5,584a6,6 0,1 0,12 0a6,6 0,1 0,-12 0zM620,667.5a6,6 0,1 0,12 0a6,6 0,1 0,-12 0zM392,667.5a6,6 0,1 0,12 0a6,6 0,1 0,-12 0zM308.5,584a6,6 0,1 0,12 0a6,6 0,1 0,-12 0zM308.5,356a6,6 0,1 0,12 0a6,6 0,1 0,-12 0zM392,272.5a6,6 0,1 0,12 0a6,6 0,1 0,-12 0z" />
+        <path android:fillColor="#FFFFF6EC"
+            android:pathData="M512,290 Q530,452 692,470 Q530,488 512,650 Q494,488 332,470 Q494,452 512,290Z" />
+        <path android:fillColor="#FFFF9A78" android:pathData="M496,470a16,16 0,1 0,32 0a16,16 0,1 0,-32 0z" />
     </group>
 </vector>

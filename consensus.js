@@ -20,8 +20,8 @@ function top(s){
   return list.filter(x => x[1] >= cut).map(x => x[0]);
 }
 
-function natal(profile, chart, ved, chi, num){
-  const W = system("Western"), V = system("Vedic"), C = system("Chinese"), N = system("Numerology");
+function natal(profile, chart, nat, chi, num){
+  const W = system("Western"), V = system("Native"), C = system("Chinese"), N = system("Numerology");
   const sg = k => Chart.signOf(chart.points[k].lon);
 
   W.add(SIGN_TRAIT[sg("sun")], 3, `Sun in ${signName(sg("sun"))}`);
@@ -31,11 +31,9 @@ function natal(profile, chart, ved, chi, num){
   for(const k of ["mercury","venus","mars"]) W.add(SIGN_TRAIT[sg(k)], 0.5, `${Chart.PLANETS[k].name} in ${signName(sg(k))}`);
   for(const t of ELEMENT_TRAITS[chart.balance.element]) W.add(t, 1, `mostly ${chart.balance.element} signs`);
 
-  const vs = k => Chart.signOf(ved.points[k].lon);
-  V.add(SIGN_TRAIT[vs("moon")], 2, `Moon in ${Vedic.RASHIS[vs("moon")]}`);
-  V.add(SIGN_TRAIT[vs("sun")], 1, `Sun in ${Vedic.RASHIS[vs("sun")]}`);
-  if(ved.lagna !== undefined) V.add(SIGN_TRAIT[Chart.signOf(ved.lagna)], 2, `${Vedic.RASHIS[Chart.signOf(ved.lagna)]} Lagna`);
-  for(const t of ved.moonNakshatra.traits) V.add(t, 1.5, `Moon in ${ved.moonNakshatra.name}`);
+  for(const t of nat.traits) V.add(t, 2, `${nat.animal} totem`);
+  for(const t of nat.clan.traits) V.add(t, 1.5, `${nat.clan.name} clan`);
+  for(const t of nat.direction.traits) V.add(t, 1, `${nat.direction.name} (${nat.direction.keeper})`);
 
   for(const t of chi.animal.traits) C.add(t, 2, `${Chinese.ELEMENTS[chi.element].name} ${chi.animal.name} year`);
   for(const t of Chinese.ELEMENTS[chi.dayMaster.element].traits) C.add(t, 1.5, `${chi.dayMaster.name} ${Chinese.ELEMENTS[chi.dayMaster.element].name} Day Master`);
@@ -67,11 +65,8 @@ function natal(profile, chart, ved, chi, num){
   return {votes, agreed:votes.filter(v=>v.count >= 2).slice(0,5), disagreement, systems:systems.map((s,i)=>({name:s.name, top:tops[i]}))};
 }
 
-// ---- Today's tone
+// ---- Today's tone. The Medicine Wheel describes who you are, not single days, so it doesn't vote here.
 const HOUSE_TONE = [null,"push","steady","connect","reflect","create","steady","connect","reflect","push","steady","connect","reflect"];
-// classical tithi groups: Nanda (joy), Bhadra (good works), Jaya (victory), Rikta (empty), Purna (full)
-const TITHI_TONE = ["create","steady","push","reflect","connect"];
-const TITHI_GROUP = ["Nanda (joyful)","Bhadra (good for steady work)","Jaya (victorious)","Rikta (empty)","Purna (full)"];
 const RELATION_TONE = {companion:"connect", support:"reflect", expression:"create", opportunity:"push", pressure:"steady"};
 const RELATION_TEXT = {
   companion:"a day of your own element: good for allies and peers",
@@ -85,8 +80,6 @@ function daily(day){
   const votes = [];
   votes.push({system:"Western", tone:HOUSE_TONE[day.moonHouse],
     why:`Moon in ${signName(day.moonSign)}, passing through your ${ordinal(day.moonHouse)} house (${Texts.HOUSE_TEXT[day.moonHouse-1].name.toLowerCase()})`});
-  const g = (day.tithi.n - 1) % 5;
-  votes.push({system:"Vedic", tone:TITHI_TONE[g], why:`${day.tithi.name}, a ${TITHI_GROUP[g]} tithi; Moon in ${day.nakshatra.name}`});
   votes.push({system:"Chinese", tone:RELATION_TONE[day.relation],
     why:`${day.dayPillar.stem.name} ${day.dayPillar.branch.name} day: ${RELATION_TEXT[day.relation]}${day.clash ? `. It clashes with your ${day.myAnimal} year, so go gently` : ""}`});
   votes.push({system:"Numerology", tone:Numerology.CYCLE[day.personalDay].tone, why:`Personal Day ${day.personalDay}: ${Numerology.CYCLE[day.personalDay].text}`});
@@ -94,8 +87,9 @@ function daily(day){
   votes.forEach(v => count[v.tone] = (count[v.tone]||0) + 1);
   const ranked = Object.entries(count).sort((a,b)=>b[1]-a[1]);
   const [tone, n] = ranked[0];
-  const tie = ranked.length > 1 && ranked[1][1] === n ? ranked[1][0] : null;
-  return {votes, tone, count:n, tie};
+  // all three different: lead with the Moon, which moves fastest and changes the day most
+  const lead = n === 1 ? votes[0].tone : tone;
+  return {votes, tone:lead, count:n, of:votes.length};
 }
 
 function ordinal(n){ return n + (["th","st","nd","rd"][(n%100-20)%10] || ["th","st","nd","rd"][n%100] || "th"); }

@@ -2,7 +2,7 @@
 // App state, first-open form, birthplace search, saving, navigation and the Profile screen.
 const {$, esc, sheet, closeSheet, toast, buzz} = UI;
 const KEY = "augur.v1";
-const DEFAULTS = {houseSystem:"placidus", ayanamsa:"lahiri", vedicStyle:"north", skin:"night"};
+const DEFAULTS = {houseSystem:"placidus", skin:"night"};
 const S = {profile:null, settings:{...DEFAULTS}, view:"today"};
 const todayKey = () => new Date().toDateString();
 
@@ -10,17 +10,18 @@ const todayKey = () => new Date().toDateString();
 function load(){
   try{ const d = JSON.parse(localStorage.getItem(KEY) || "null"); if(d){ S.profile = d.profile; S.settings = {...DEFAULTS, ...d.settings}; } }catch(e){}
 }
-function save(){ localStorage.setItem(KEY, JSON.stringify({profile:S.profile, settings:S.settings})); }
+// (private browsing can block storage; Augur still works, it just won't remember you)
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify({profile:S.profile, settings:S.settings})); }catch(e){} }
 function saveSettings(){ save(); }
 
 // ---- calculations
 function compute(){
   S.chart = Chart.natal(S.profile, S.settings);
-  S.ved = Vedic.vedic(S.chart, S.settings);
+  S.wheel = Native.native(S.chart);
   S.chi = Chinese.chinese(S.profile, S.chart);
   S.num = Numerology.numerology(S.profile);
-  S.nat = Consensus.natal(S.profile, S.chart, S.ved, S.chi, S.num);
-  S.day = Daily.day(S.profile, S.chart, S.ved, S.chi, S.settings);
+  S.nat = Consensus.natal(S.profile, S.chart, S.wheel, S.chi, S.num);
+  S.day = Daily.day(S.profile, S.chart, S.chi);
   S.dayKey = todayKey();
 }
 function renderAll(){
@@ -41,7 +42,7 @@ function go(view, sub){
   $("#v-" + view).classList.add("on");
   document.querySelectorAll("#nav button").forEach(b => b.classList.toggle("on", b.dataset.v === view));
   if(view === "systems" && sub) Systems.render(S, sub);
-  scrollTo(0,0);
+  UI.toTop();
 }
 function showApp(){
   $("#onboard").classList.remove("on"); $("#nav").style.display = "";
@@ -157,7 +158,7 @@ function openForm(){
     }
   }
   $("#f-date").max = new Date().toISOString().slice(0,10);
-  scrollTo(0,0);
+  UI.toTop();
 }
 
 // ---- Profile & settings
@@ -172,8 +173,6 @@ function renderProfile(){
       <p class="small dim">${UI.dateFmt(new Date(p.date+"T12:00"))} · ${p.timeMode === "unknown" ? "time unknown" : p.time + (p.timeMode === "approx" ? ` ± ${p.timeSpread} min` : "")} · ${esc(p.place.name)}</p></div>
     <div class="card">
       <div class="field" style="margin-top:0"><label>House system (Western)</label><select id="s-house">${opt(Chart.HOUSE_SYSTEMS, st.houseSystem)}</select></div>
-      <div class="field"><label>Ayanamsa (Vedic)</label><select id="s-ayan">${opt(Vedic.AYANAMSAS, st.ayanamsa)}</select></div>
-      <div class="field"><label>Vedic chart style</label><select id="s-vstyle">${opt({north:"North Indian (diamond)", south:"South Indian (grid)"}, st.vedicStyle)}</select></div>
       <div class="field" style="margin-bottom:0"><label>Look</label><select id="s-skin">${opt({night:"Night", dawn:"Dawn", paper:"Paper"}, st.skin)}</select></div>
     </div>
     <div class="card small"><div class="label">Privacy</div>
@@ -191,7 +190,7 @@ function renderProfile(){
       <p class="faint tiny">Version ${esc(version)} · For entertainment and reflection, not a substitute for professional advice.</p></div>`;
   $("#p-edit").onclick = openForm;
   const bind = (id, key) => $(id).onchange = e => { S.settings[key] = e.target.value; save(); applySkin(); renderAll(); go("profile"); toast("Saved"); };
-  bind("#s-house","houseSystem"); bind("#s-ayan","ayanamsa"); bind("#s-vstyle","vedicStyle"); bind("#s-skin","skin");
+  bind("#s-house","houseSystem"); bind("#s-skin","skin");
   $("#p-delete").onclick = () => {
     sheet(`<h2>Delete everything?</h2><p class="dim">This removes your birth details and settings from this phone. It can't be undone.</p>
       <button class="btn danger" id="p-really">Delete</button><button class="btn ghost" style="margin-top:8px" id="p-keep">Keep my data</button>`);
@@ -199,7 +198,7 @@ function renderProfile(){
     $("#p-really").onclick = () => { localStorage.removeItem(KEY); location.reload(); };
   };
 }
-function applySkin(){ document.body.dataset.skin = S.settings.skin; }
+function applySkin(){ $("#screen").className = "screen " + (S.settings.skin === "night" ? "" : S.settings.skin); }
 
 // ---- start
 load(); applySkin(); UI.starfield();
@@ -212,5 +211,8 @@ if("serviceWorker" in navigator && location.protocol === "https:" && location.ho
   navigator.serviceWorker.register("sw.js").catch(()=>{});
 }
 
-window.App = {go, saveSettings, state:S};
+// load a profile directly (used by the demo)
+function useProfile(p){ S.profile = p; save(); S.view = "today"; showApp(); }
+
+window.App = {go, saveSettings, useProfile, state:S};
 })();

@@ -24,7 +24,7 @@ import androidx.webkit.WebViewAssetLoader;
 public class MainActivity extends Activity {
     private static final String HOST = "appassets.androidplatform.net";
     private static final String START = "https://" + HOST + "/assets/www/index.html";
-    private static final String NIGHT = "#0d0820";
+    private static final String NIGHT = "#0b1433";
 
     private WebView web;
 

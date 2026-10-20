@@ -1,5 +1,5 @@
 (() => {
-// Systems tab: Western, Vedic, Chinese and Numerology in full detail.
+// Systems tab: Western, Native American, Chinese and Numerology in full detail.
 const {SIGNS, PLANETS, signOf, fmtDeg, HOUSE_SYSTEMS} = Chart;
 const {SIGN_TEXT, PLANET_TEXT, HOUSE_TEXT} = Texts;
 const {$, esc, sheet, dateFmt} = UI;
@@ -7,15 +7,14 @@ let current = "western";
 
 function render(S, which){
   if(which) current = which;
-  const tabs = [["western","Western"],["vedic","Vedic"],["chinese","Chinese"],["numerology","Numerology"]];
-  const body = {western, vedic, chinese, numerology}[current](S);
+  const tabs = [["western","Western"],["native","Native American"],["chinese","Chinese"],["numerology","Numerology"]];
+  const body = {western, native, chinese, numerology}[current](S);
   $("#v-systems").innerHTML = `<div class="top"><div><div class="date">Four ways to read you</div><h1>Systems</h1></div></div>
     <div class="tabs">${tabs.map(([k,n])=>`<button data-k="${k}" class="${k===current?"on":""}">${n}</button>`).join("")}</div>${body}`;
-  document.querySelectorAll("#v-systems .tabs button").forEach(b => b.onclick = () => { render(S, b.dataset.k); UI.buzz("8"); scrollTo(0,0); });
+  document.querySelectorAll("#v-systems .tabs button").forEach(b => b.onclick = () => { render(S, b.dataset.k); UI.buzz("8"); UI.toTop(); });
   document.querySelectorAll("#v-systems [data-planet]").forEach(el => el.onclick = () => planetSheet(S, el.dataset.planet));
   document.querySelectorAll("#v-systems [data-num]").forEach(el => el.onclick = () => numberSheet(S, el.dataset.num));
-  const sw = $("#v-systems #vstyle");
-  if(sw) sw.onclick = () => { S.settings.vedicStyle = S.settings.vedicStyle === "north" ? "south" : "north"; App.saveSettings(); render(S); };
+  document.querySelectorAll("#v-systems [data-totem]").forEach(el => el.onclick = () => totemSheet(+el.dataset.totem));
 }
 
 // ---- Western
@@ -45,32 +44,38 @@ function planetSheet(S, k){
     <p class="tiny faint">${fmtDeg(pl.lon)}${pl.speed !== undefined ? ` · moving ${Math.abs(pl.speed).toFixed(2)}° a day` : ""}</p>`);
 }
 
-// ---- Vedic
-function vedic(S){
-  const v = S.ved, haveLagna = v.lagna !== undefined;
-  const lagnaLon = haveLagna ? v.lagna : v.points.moon.lon;
-  const style = S.settings.vedicStyle || "north";
-  const draw = style === "north" ? Draw.northIndian(v, lagnaLon) : Draw.southIndian(v, lagnaLon);
-  const order = ["sun","moon","mars","mercury","jupiter","venus","saturn","rahu","ketu"];
-  const L = signOf(lagnaLon);
-  const rows = order.map(k => { const n = Vedic.nakshatraOf(v.points[k].lon);
-    return `<tr><td class="g">${Draw.ABBR[k]}</td><td>${Vedic.GRAHAS[k]}${v.points[k].retro && k!=="rahu" && k!=="ketu" ? " ℞" : ""}<div class="tiny faint">${n.name} ${n.pada}</div></td>
-      <td>${Vedic.RASHIS[signOf(v.points[k].lon)]} ${fmtDeg(v.points[k].lon,false)}</td><td class="r faint small">bhava ${(signOf(v.points[k].lon) - L + 12)%12 + 1}</td></tr>`; }).join("");
-  const mn = v.moonNakshatra, d = v.dasha;
-  const dlist = d.list.filter(x => x.end > S.chart.utc).slice(0,9).map(x => `<tr${x===d.current?' style="color:var(--gold)"':""}><td>${Vedic.GRAHAS[x.lord]}</td><td class="r small">${x.start.getFullYear()}–${x.end.getFullYear()}</td></tr>`).join("");
-  return `<div class="card">${draw}
-      <div class="row between"><span class="tiny faint">${haveLagna ? "" : "No birth time, so this is the Chandra Lagna (Moon) chart · "}${Vedic.AYANAMSAS[S.settings.ayanamsa||"lahiri"].name} ayanamsa ${v.ayanamsa.toFixed(2)}°</span>
-      <button class="btn small ghost" id="vstyle">${style === "north" ? "South Indian" : "North Indian"} style</button></div></div>
-    <div class="card"><div class="label">Moon nakshatra</div><h2>${mn.name} <span class="small faint">pada ${mn.pada}</span></h2>
-      <p>${mn.key[0].toUpperCase()+mn.key.slice(1)}. Its symbol is ${mn.symbol} and its deity ${mn.deity}. Ruled by ${Vedic.GRAHAS[mn.lord]}.</p>
-      <p class="small dim">In Jyotish your Moon's nakshatra says more about your nature than your Sun sign does.</p></div>
-    ${haveLagna ? `<div class="card"><div class="label">Lagna (ascendant)</div><p><b>${Vedic.RASHIS[L]}</b> (${SIGNS[L].name}) at ${fmtDeg(v.lagna,false)}, in ${v.lagnaNakshatra.name}.</p></div>` : ""}
-    <div class="card"><div class="label">Grahas</div><table class="list">${rows}</table>
-      <p class="tiny faint">Sidereal zodiac, whole-sign houses (bhavas). ℞ = retrograde.</p></div>
-    <div class="card"><div class="label">Vimshottari dasha</div>
-      ${d.current ? `<p>You're in a <b>${Vedic.GRAHAS[d.current.lord]}</b> period until ${dateFmt(d.current.end, {month:"long", year:"numeric"})}${d.currentSub ? `, in its <b>${Vedic.GRAHAS[d.currentSub.lord]}</b> sub-period until ${dateFmt(d.currentSub.end, {day:"numeric", month:"short", year:"numeric"})}` : ""}.</p>` : ""}
-      <table class="list">${dlist}</table></div>
-    <div class="card small dim">Why is my Vedic sign different? Vedic astrology measures the zodiac against the fixed stars, Western against the seasons. They've drifted about ${Math.round(v.ayanamsa)}° apart, so most people's Vedic signs are one sign earlier.</div>`;
+// ---- Native American (Sun Bear's Medicine Wheel)
+function native(S){
+  const n = S.wheel, T = Native.TOTEMS;
+  const name = i => T[i].animal + (T[i].alt ? ` <span class="faint">(${T[i].alt})</span>` : "");
+  return `<div class="card">${Draw.medicineWheel(n.index)}<p class="tiny faint" style="text-align:center">Your moon of the wheel glows. Tap a totem below to read about it.</p></div>
+    <div class="card hero-card"><div class="label">Your birth totem</div>
+      <h2>${name(n.index)}</h2>
+      <p class="dim small">${n.moon} · ${n.dates}</p>
+      <p class="serif-p">${n.text}</p>
+      ${n.cusp !== null ? `<div class="warn">You were born within a day of the ${T[n.cusp].animal}'s moon, so you may recognise yourself in both.</div>` : ""}
+      <div class="grid3 facts">
+        <div><span>Plant</span><b>${n.plant}</b></div><div><span>Mineral</span><b>${n.mineral}</b></div>
+        <div><span>Colour</span><b><i class="sw" style="background:${n.colour[1]}"></i>${n.colour[0]}</b></div>
+      </div></div>
+    <div class="grid2">
+      <div class="card" style="margin:0"><div class="label">Elemental clan</div><h3>${n.clan.name} <span class="faint small">${n.clan.element}</span></h3><p class="small dim">${n.clan.text}</p>
+        <p class="tiny faint">Clan kin: ${n.kin.map(i=>T[i].animal).join(", ")}</p></div>
+      <div class="card" style="margin:0"><div class="label">Spirit keeper</div><h3>${n.direction.name} <span class="faint small">${n.direction.keeper}</span></h3>
+        <p class="small dim">The ${n.direction.season} direction, the gift of ${n.direction.gift}.</p></div>
+    </div>
+    <div class="card"><div class="label">Across the wheel</div>
+      <p class="small">Opposite you sits the <b class="tap link" data-totem="${n.opposite}">${T[n.opposite].animal}</b>. Its strengths are the ones you grow into: ${T[n.opposite].text.split(". ")[0].toLowerCase()}.</p></div>
+    <div class="card"><div class="label">All twelve moons</div><table class="list">
+      ${[9,10,11,0,1,2,3,4,5,6,7,8].map(i => `<tr class="tap" data-totem="${i}"${i===n.index?' style="color:var(--gold)"':""}><td>${T[i].animal}</td><td class="small dim">${T[i].moon}</td><td class="r small">${T[i].dates}</td></tr>`).join("")}
+    </table></div>
+    <div class="card small dim">This is the Medicine Wheel astrology published by Sun Bear and Wabun Wind in 1980, the version most "Native American zodiac" sites use. It draws on Anishinaabe teachings, but it's a modern system, not a tradition of any one Nation, and many Native people see it that way. Your totem follows the Sun's position at birth, so it often agrees with your Western Sun sign.</div>`;
+}
+function totemSheet(i){
+  const t = Native.totemOf(i*30 + 15);
+  sheet(`<h2>${t.animal}${t.alt ? ` <span class="faint">(${t.alt})</span>` : ""}</h2><p class="dim">${t.moon} · ${t.dates}</p>
+    <div class="card reading"><p>${t.text}</p></div>
+    <p class="small">${t.clan.name} clan (${t.clan.element}) · ${t.direction.name}, ${t.direction.keeper} · ${t.plant} · ${t.mineral} · ${t.colour[0]}</p>`);
 }
 
 // ---- Chinese

@@ -39,11 +39,10 @@ function transits(pos, natalPts){
   return out.sort((a,b)=>b.weight - a.weight);
 }
 
-function day(profile, chart, ved, chi, settings, now=new Date()){
+function day(profile, chart, chi, now=new Date()){
   const noon = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12, 0);
   const pos = Astro.positions(noon);
   const before = Astro.positions(new Date(noon.getTime()-12*3600000)), after = Astro.positions(new Date(noon.getTime()+12*3600000));
-  const ay = Vedic.ayanamsa(noon, settings.ayanamsa);
   const dp = Chinese.dayPillar(now.getFullYear(), now.getMonth()+1, now.getDate());
   const per = Numerology.personal(profile, now);
   const phase = Astro.moonPhase(noon);
@@ -51,7 +50,7 @@ function day(profile, chart, ved, chi, settings, now=new Date()){
     date:noon, pos, phase, phaseName:phaseName(phase.elong),
     moonSign:signOf(pos.moon.lon), sunSign:signOf(pos.sun.lon),
     moonHouse:houseOf(pos.moon.lon, chart.houses.cusps),
-    tithi:Vedic.tithi(noon), nakshatra:Vedic.nakshatraOf(pos.moon.lon - ay),
+    wheelMoon:Native.totemOf(pos.sun.lon),
     dayPillar:dp, relation:Chinese.relation(chi.dayMaster.element, dp.stem.element),
     clash: dp.branchIndex === chi.clash, myAnimal:chi.animal.name,
     personalDay:per.personalDay, personalMonth:per.personalMonth, personalYear:per.personalYear,

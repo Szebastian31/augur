@@ -1,8 +1,7 @@
 (() => {
-// Chart drawings as inline SVG: the Western wheel and the North / South Indian charts.
+// Chart drawings as inline SVG: the Western wheel and the Native American Medicine Wheel.
 const {SIGNS, PLANETS, signOf, angDist} = Chart;
 const {norm360, cosD, sinD} = Astro;
-const ABBR = {sun:"Su", moon:"Mo", mars:"Ma", mercury:"Me", jupiter:"Ju", venus:"Ve", saturn:"Sa", rahu:"Ra", ketu:"Ke"};
 const EL_COL = {fire:"var(--fire)", earth:"var(--earth)", air:"var(--air)", water:"var(--water)"};
 
 // ---- Western wheel. Ascendant on the left, signs running anticlockwise, like a printed chart.
@@ -54,47 +53,36 @@ function wheel(chart){
   return s + `</svg>`;
 }
 
-// planets in each sign (0–11) for the Vedic charts
-function bySign(ved, lagnaLon){
-  const out = [...Array(12)].map(()=>[]);
-  for(const k of Object.keys(ABBR)) out[signOf(ved.points[k].lon)].push(ABBR[k] + (ved.points[k].retro && k !== "rahu" && k !== "ketu" ? "*" : ""));
-  out[signOf(lagnaLon)].unshift("As");
-  return out;
-}
-const txt = (x, y, items, size=11) => items.map((t,i) => `<text x="${x}" y="${y + (i - (items.length-1)/2)*13}" text-anchor="middle" dominant-baseline="central" font-size="${size}" style="fill:${t==="As"?"var(--gold)":"var(--text)"}" font-family="var(--sans)" font-weight="${t==="As"?700:500}">${t}</text>`).join("");
-
-// ---- North Indian: houses fixed, signs move. House 1 is the top diamond.
-function northIndian(ved, lagnaLon){
-  const L = signOf(lagnaLon), ps = bySign(ved, lagnaLon);
-  const C = [[150,80],[75,38],[38,75],[80,150],[38,225],[75,262],[150,220],[225,262],[262,225],[220,150],[262,75],[225,38]];
-  const N = [[150,128],[75,12],[12,75],[128,150],[12,225],[75,290],[150,172],[225,290],[290,225],[172,150],[290,75],[225,12]];
-  let s = `<svg class="wheel" viewBox="-4 -4 308 308" style="max-width:360px">`;
-  s += `<rect x="0" y="0" width="300" height="300" fill="none" style="stroke:var(--gold)" stroke-width="1.5"/>`;
-  s += `<path d="M0,0L300,300M300,0L0,300M150,0L300,150L150,300L0,150Z" fill="none" style="stroke:var(--gold)" stroke-opacity=".6"/>`;
-  for(let h=0;h<12;h++){
-    const sign = (L + h)%12;
-    s += `<text x="${N[h][0]}" y="${N[h][1]}" text-anchor="middle" dominant-baseline="central" font-size="9.5" style="fill:var(--faint)" font-family="var(--sans)">${sign+1}</text>`;
-    s += txt(C[h][0], C[h][1], ps[sign], h%3===0 ? 12 : 10.5);
-  }
-  return s + `</svg>`;
-}
-
-// ---- South Indian: signs fixed (Pisces top-left, running clockwise), houses move.
-function southIndian(ved, lagnaLon){
-  const cell = [[0,1],[0,2],[0,3],[1,3],[2,3],[3,3],[3,2],[3,1],[3,0],[2,0],[1,0],[0,0]];
-  const L = signOf(lagnaLon), ps = bySign(ved, lagnaLon), w = 75;
-  let s = `<svg class="wheel" viewBox="-4 -4 308 308" style="max-width:360px">`;
+// ---- Medicine Wheel: North (winter, Snow Goose) at the top, moving sunwise through East, South and West.
+// The wedge you were born in glows; clan colours ring the inside.
+const CLAN_COL = EL_COL;
+function medicineWheel(mine){
+  const pos = (i, r) => { const a = (((i - 9 + 12) % 12) * 30 + 15 - 90) * Math.PI/180; return [r*Math.cos(a), r*Math.sin(a)]; };
+  const arc = (i, r1, r2) => {
+    const a0 = (((i - 9 + 12) % 12) * 30 - 90) * Math.PI/180, a1 = a0 + Math.PI/6;
+    const p = (r, a) => `${(r*Math.cos(a)).toFixed(2)},${(r*Math.sin(a)).toFixed(2)}`;
+    return `M${p(r1,a0)}A${r1},${r1} 0 0 1 ${p(r1,a1)}L${p(r2,a1)}A${r2},${r2} 0 0 0 ${p(r2,a0)}Z`;
+  };
+  let s = `<svg class="wheel" viewBox="-170 -170 340 340" font-family="var(--sans)">`;
   for(let i=0;i<12;i++){
-    const [r,c] = cell[i], x = c*w, y = r*w;
-    s += `<rect x="${x}" y="${y}" width="${w}" height="${w}" fill="${i===L?"rgba(232,199,122,.12)":"none"}" style="stroke:var(--gold)" stroke-opacity=".6"/>`;
-    if(i === L) s += `<line x1="${x}" y1="${y+16}" x2="${x+16}" y2="${y}" style="stroke:var(--gold)"/>`;
-    s += `<text x="${x+w-5}" y="${y+11}" text-anchor="end" font-size="8.5" style="fill:var(--faint)" font-family="var(--sans)">${Vedic.RASHIS[i]}</text>`;
-    s += txt(x+w/2, y+w/2+5, ps[i].filter(t=>t!=="As"), 11);
+    const on = i === mine, el = SIGNS[i].element;
+    s += `<path d="${arc(i,150,92)}" style="fill:${on ? "var(--gold)" : "var(--card)"};stroke:var(--line)" fill-opacity="${on ? .22 : 1}"/>`;
+    s += `<path d="${arc(i,92,80)}" style="fill:${CLAN_COL[el]}" fill-opacity="${on ? .95 : .55}"/>`;
+    const [x,y] = pos(i, 128), [mx,my] = pos(i, 106);
+    s += `<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="central" font-size="${Native.TOTEMS[i].animal.length > 8 ? 8.2 : 9.5}" font-weight="${on?700:600}" style="fill:${on ? "var(--gold2)" : "var(--text)"}">${Native.TOTEMS[i].animal}</text>`;
+    s += `<text x="${mx}" y="${my}" text-anchor="middle" dominant-baseline="central" font-size="6.6" style="fill:var(--faint)">${Native.TOTEMS[i].dates.split(" – ")[0]}</text>`;
   }
-  s += `<text x="150" y="142" text-anchor="middle" font-size="15" font-family="var(--serif)" style="fill:var(--gold)">Rasi</text>`;
-  s += `<text x="150" y="162" text-anchor="middle" font-size="9.5" font-family="var(--sans)" style="fill:var(--faint)">Lagna in ${Vedic.RASHIS[L]}</text>`;
+  s += `<circle r="80" style="fill:var(--bg)" fill-opacity=".35"/>`;
+  s += `<path d="M0,-74V74M-74,0H74" style="stroke:var(--line)"/><circle r="22" fill="none" style="stroke:var(--line)"/>`;
+  const D = [["N","Waboose",0,-52],["E","Wabun",52,0],["S","Shawnodese",0,52],["W","Mudjekeewis",-52,0]];
+  const myDir = Native.DIRECTIONS[Math.floor(mine/3)].name[0];
+  for(const [k,n,x,y] of D){
+    const on = k === myDir;
+    s += `<text x="${x}" y="${y-5}" text-anchor="middle" font-size="15" font-family="var(--display)" font-weight="700" style="fill:${on ? "var(--gold)" : "var(--dim)"}">${k}</text>`;
+    s += `<text x="${x}" y="${y+9}" text-anchor="middle" font-size="6.8" style="fill:var(--faint)">${n}</text>`;
+  }
   return s + `</svg>`;
 }
 
-window.Draw = {wheel, northIndian, southIndian, ABBR};
+window.Draw = {wheel, medicineWheel};
 })();

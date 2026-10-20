@@ -23,12 +23,25 @@ function dots(n, of=4){ return `<span class="dots">${[...Array(of)].map((_,i)=>`
 // a quiet starfield behind everything (seeded, so it's the same every time)
 function starfield(){
   const c = $("#stars"), x = c.getContext("2d"), dpr = Math.min(2, devicePixelRatio||1);
-  c.width = innerWidth*dpr; c.height = innerHeight*dpr;
+  c.width = c.clientWidth*dpr; c.height = c.clientHeight*dpr;
   let s = 11; const r = () => (s = (s*16807)%2147483647)/2147483647;
-  for(let i=0;i<140;i++){
-    x.globalAlpha = 0.15 + r()*0.6; x.fillStyle = r() < 0.15 ? "#e8c77a" : "#ffffff";
-    x.beginPath(); x.arc(r()*c.width, r()*c.height*0.85, (0.4 + r()*1.1)*dpr, 0, 7); x.fill();
+  for(let i=0;i<120;i++){
+    x.globalAlpha = 0.12 + r()*0.6; x.fillStyle = r() < 0.12 ? "#ffd9b0" : "#ffffff";
+    x.beginPath(); x.arc(r()*c.width, r()*c.height*0.7, (0.35 + r()*1.0)*dpr, 0, 7); x.fill();
   }
+}
+const toTop = () => { const m = $("#main"); if(m) m.scrollTop = 0; };
+
+// the agreement ring: one arc per system, lit when it agrees with the day's tone (like Hora's timer ring)
+function agreeRing(votes, tone){
+  const n = votes.length, gap = 10, R = 74, C = 2*Math.PI*R, seg = C/n - gap;
+  let s = `<svg viewBox="0 0 180 180" class="ring">`;
+  s += `<circle cx="90" cy="90" r="${R}" class="ring-track"/>`;
+  votes.forEach((v,i) => {
+    s += `<circle cx="90" cy="90" r="${R}" class="ring-seg ${v.tone === tone ? "on" : ""}" stroke-dasharray="${seg.toFixed(1)} ${(C-seg).toFixed(1)}"
+      stroke-dashoffset="${(-(i*C/n) + C/4 - gap/2).toFixed(1)}"/>`;
+  });
+  return s + `</svg>`;
 }
 
 // ---- Today
@@ -38,47 +51,51 @@ function renderToday(S){
   const hour = new Date().getHours();
   const hello = hour < 5 ? "Good night" : hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
   const voteRows = c.votes.map(v => `<div class="vote"><div class="sys">${v.system}</div><div class="grow">
-      <div class="t ${v.tone===c.tone?"match":""}">${TONES[v.tone].icon} ${TONES[v.tone].name}</div><div class="small dim">${esc(v.why)}</div></div></div>`).join("");
-  const R = d.ratings, rat = k => `<div class="r"><span>${k[0].toUpperCase()+k.slice(1)}</span><div class="bar"><i style="width:${R[k]*20}%"></i></div><span class="small">${R[k]}/5</span></div>`;
+      <div class="t ${v.tone===c.tone?"match":""}">${TONES[v.tone].name}</div><div class="small dim">${esc(v.why)}</div></div></div>`).join("");
+  const R = d.ratings, rat = k => `<div class="r"><span>${k[0].toUpperCase()+k.slice(1)}</span><div class="bar"><i style="width:${R[k]*20}%"></i></div><span class="small">${R[k]}</span></div>`;
+  const verdict = c.count === c.of ? "All three systems point the same way." : c.count >= 2 ? `${c.count} of ${c.of} systems agree.` : "The systems disagree today, so the Moon leads.";
+  const sun = sg(signOf(S.chart.points.sun.lon)), wm = d.wheelMoon;
   $("#v-today").innerHTML = `
-    <div class="top"><div><div class="date">${dateFmt(new Date(), {weekday:"long", day:"numeric", month:"long"})}</div><h1>${hello}, ${esc(first)}</h1></div></div>
+    <div class="top"><div><div class="date">${dateFmt(new Date(), {weekday:"long", day:"numeric", month:"long"})}</div><h1>${hello}, ${esc(first)}</h1></div>
+      <div class="badge"><i></i>${d.phaseName}</div></div>
 
-    <div class="card consensus tap" id="t-cons">
-      <div class="label"><span>Where the systems agree today</span><span class="gold">${c.count}/4</span></div>
-      <h2>${tone.icon} ${tone.name}</h2>
-      <div class="meter">${[0,1,2,3].map(i=>`<i class="${i<c.count?"on":""}"></i>`).join("")}</div>
-      <p class="small dim">${c.count === 4 ? "All four systems point the same way today." : c.count === 3 ? "Three of four systems agree." : c.tie ? `Split between ${tone.name.toLowerCase()} and ${TONES[c.tie].name.toLowerCase()}.` : "The systems mostly disagree today, so trust your own read."}</p>
-      <div id="t-votes" style="display:none; margin-top:8px">${voteRows}</div>
-      <div class="tiny faint" id="t-more">Tap to see how each system voted</div>
+    <div class="hero tap" id="t-cons">
+      <div class="ringwrap">${agreeRing(c.votes, c.tone)}
+        <div class="ring-in"><div class="ring-n">${c.count}<small>/${c.of}</small></div><div class="ring-l">agree</div></div></div>
+      <div class="kicker">Where the systems agree today</div>
+      <div class="tone">${tone.name}</div>
+      <p class="tone-t">${tone.text}</p>
+      <p class="tiny faint">${verdict} <span id="t-more">Tap to see each vote.</span></p>
     </div>
+    <div class="card" id="t-votes" style="display:none">${voteRows}</div>
 
     <div class="card reading">
-      <div class="label"><span>Your day</span><span>${sg(signOf(S.chart.points.sun.lon)).glyph} ${sg(signOf(S.chart.points.sun.lon)).name}</span></div>
+      <div class="label"><span>Your day</span><span>${sun.glyph} ${sun.name}</span></div>
       ${d.reading.map(p=>`<p>${p}</p>`).join("")}
-      <div class="row" style="margin-top:10px"><button class="btn small ghost" id="t-share">Share</button></div>
+      <div class="row" style="margin-top:12px"><button class="btn small ghost" id="t-share">Share</button></div>
     </div>
 
     <div class="grid2">
       <div class="card ratings" style="margin:0"><div class="label">Today's stars</div>${["love","work","energy","mood"].map(rat).join("")}</div>
-      <div class="card" style="margin:0"><div class="label">For luck</div>
-        <div class="row"><span style="width:22px;height:22px;border-radius:50%;background:${d.colour[1]};flex:none"></span><span class="small">Colour: ${d.colour[0]}</span></div>
-        <div class="serif" style="font-size:34px; color:var(--gold); margin-top:6px">${d.lucky}</div><div class="tiny faint">Number of the day</div>
+      <div class="card luck" style="margin:0"><div class="label">For luck</div>
+        <div class="lucky">${d.lucky}</div><div class="tiny faint">number of the day</div>
+        <div class="row" style="margin-top:10px"><i class="sw" style="background:${d.colour[1]}"></i><span class="small">${d.colour[0]}</span></div>
       </div>
     </div>
 
-    <div class="card"><div class="label">Quote of the day</div><div class="quote">“${esc(q.text)}”</div><div class="by">— ${esc(q.by)}</div></div>
+    <div class="card quote-card"><div class="label">Quote of the day</div><div class="quote">${esc(q.text)}</div><div class="by">${esc(q.by)}</div></div>
 
     <div class="card tap" id="t-sky">
       <div class="label"><span>Today's sky</span><span class="chev"></span></div>
       <table class="list">
         <tr><td class="g">☉</td><td>Sun in ${sg(d.sunSign).name}</td><td class="r">${fmtDeg(d.pos.sun.lon,false)}</td></tr>
-        <tr><td class="g">☽</td><td>Moon in ${sg(d.moonSign).name} · ${d.phaseName}</td><td class="r">${Math.round(d.phase.illum*100)}% lit</td></tr>
-        <tr><td class="g">✧</td><td>Vedic Moon in ${d.nakshatra.name}</td><td class="r">${d.tithi.name.split(" ")[0]}</td></tr>
+        <tr><td class="g">☽</td><td>Moon in ${sg(d.moonSign).name}</td><td class="r">${Math.round(d.phase.illum*100)}% lit</td></tr>
+        <tr><td class="g">◍</td><td>${wm.moon} <span class="faint">(${wm.animal})</span></td><td class="r small">wheel</td></tr>
         <tr><td class="g">${d.dayPillar.stem.han}${d.dayPillar.branch.han}</td><td>${d.dayPillar.stem.name} ${d.dayPillar.branch.name} day</td><td class="r el-${d.dayPillar.stem.element}">${Chinese.ELEMENTS[d.dayPillar.stem.element].name}</td></tr>
         ${d.retro.length ? `<tr><td class="g">℞</td><td>Retrograde: ${d.retro.map(k=>PLANETS[k].name).join(", ")}</td><td></td></tr>` : ""}
       </table>
     </div>`;
-  $("#t-cons").onclick = () => { const v = $("#t-votes"), on = v.style.display === "none"; v.style.display = on ? "block" : "none"; $("#t-more").style.display = on ? "none" : "block"; buzz(); };
+  $("#t-cons").onclick = () => { const v = $("#t-votes"), on = v.style.display === "none"; v.style.display = on ? "block" : "none"; $("#t-more").textContent = on ? "Tap to hide." : "Tap to see each vote."; buzz(); };
   $("#t-share").onclick = () => share(`${dateFmt(new Date())}, ${tone.name}\n\n${d.reading.map(p=>p.replace(/<[^>]+>/g,"")).join("\n\n")}\n\n“${q.text}” — ${q.by}\n\nfrom Augur`);
   $("#t-sky").onclick = () => skySheet(S);
 }
@@ -91,8 +108,7 @@ function skySheet(S){
   sheet(`<h2>Today's sky</h2><p class="small dim">Positions at noon today, tropical zodiac. Houses are your natal houses.</p>
     <div class="card"><table class="list">${rows}</table></div>
     <h3>Transits to your chart</h3><div class="card">${tr ? `<table class="list">${tr}</table>` : `<p class="dim small">No close aspects today.</p>`}</div>
-    <h3>Vedic</h3><div class="card small"><p>Moon in <b>${d.nakshatra.name}</b>, pada ${d.nakshatra.pada}: ${d.nakshatra.key}. Ruled by ${Vedic.GRAHAS[d.nakshatra.lord]}.</p>
-      <p>Tithi: <b>${d.tithi.name}</b>, ${d.tithi.paksha}.</p></div>
+    <h3>Medicine Wheel</h3><div class="card small"><p>The Sun is in the <b>${d.wheelMoon.moon}</b>, the moon of the <b>${d.wheelMoon.animal}</b>${d.wheelMoon.index === S.wheel.index ? ", your own birth moon" : ""}.</p></div>
     <h3>Numerology</h3><div class="card small"><p>Personal Year <b>${d.personalYear}</b> · Month <b>${d.personalMonth}</b> · Day <b>${d.personalDay}</b></p><p class="dim">Today is ${Numerology.CYCLE[d.personalDay].text}.</p></div>`);
 }
 
@@ -148,10 +164,10 @@ function renderMe(S){
     </div>
 
     <div class="grid2">
-      <div class="card tap" style="margin:0" data-go="vedic"><div class="label">Vedic</div><div class="serif" style="font-size:17px">Moon in ${S.ved.moonNakshatra.name}</div><div class="small dim">${S.ved.moonNakshatra.key}</div></div>
-      <div class="card tap" style="margin:0" data-go="chinese"><div class="label">Chinese</div><div class="serif" style="font-size:17px">${Chinese.ELEMENTS[S.chi.element].name} ${S.chi.animal.name}</div><div class="small dim">${S.chi.dayMaster.name} ${Chinese.ELEMENTS[S.chi.dayMaster.element].name} Day Master</div></div>
-      <div class="card tap" style="margin:0" data-go="numerology"><div class="label">Numerology</div><div class="serif" style="font-size:17px">Life Path ${S.num.lifePath}</div><div class="small dim">${Numerology.NUMBERS[S.num.lifePath].title}</div></div>
-      <div class="card tap" style="margin:0" data-go="western"><div class="label">Western</div><div class="serif" style="font-size:17px">Mostly ${ch.balance.element}</div><div class="small dim">${ch.balance.mode} signs lead</div></div>
+      <div class="card tap" style="margin:0" data-go="native"><div class="label">Native American</div><div class="mini-h">${S.wheel.animal}</div><div class="small dim">${S.wheel.clan.name} clan · ${S.wheel.direction.name}</div></div>
+      <div class="card tap" style="margin:0" data-go="chinese"><div class="label">Chinese</div><div class="mini-h">${Chinese.ELEMENTS[S.chi.element].name} ${S.chi.animal.name}</div><div class="small dim">${S.chi.dayMaster.name} ${Chinese.ELEMENTS[S.chi.dayMaster.element].name} Day Master</div></div>
+      <div class="card tap" style="margin:0" data-go="numerology"><div class="label">Numerology</div><div class="mini-h">Life Path ${S.num.lifePath}</div><div class="small dim">${Numerology.NUMBERS[S.num.lifePath].title}</div></div>
+      <div class="card tap" style="margin:0" data-go="western"><div class="label">Western</div><div class="mini-h">Mostly ${ch.balance.element}</div><div class="small dim">${ch.balance.mode} signs lead</div></div>
     </div>
 
     <p class="tiny faint" style="margin-top:16px">Born ${dateFmt(new Date(S.profile.date+"T12:00"))}${ch.timeKnown ? ` at ${S.profile.time}` : ""} in ${esc(S.profile.place.name)}.
@@ -164,5 +180,5 @@ function renderMe(S){
   document.querySelectorAll("#v-me [data-go]").forEach(el => el.onclick = () => App.go("systems", el.dataset.go));
 }
 
-window.UI = {$, esc, sheet, closeSheet, toast, buzz, share, starfield, renderToday, renderMe, dateFmt, dots};
+window.UI = {$, esc, sheet, closeSheet, toast, buzz, share, starfield, toTop, renderToday, renderMe, dateFmt, dots};
 })();

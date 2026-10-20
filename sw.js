@@ -1,7 +1,7 @@
 // Augur offline cache. Bump VERSION whenever you change a file so phones pick up the update.
-const VERSION = "augur-v1";
-const FILES = ["./","index.html","astro.js","chart.js","vedic.js","chinese.js","numerology.js","texts.js","quotes.js","consensus.js","daily.js",
-  "ui.js","draw.js","systems.js","app.js","manifest.webmanifest","icons/icon.svg","icons/icon-192.png","icons/icon-512.png","icons/apple-touch-icon.png"];
+const VERSION = "augur-v2";
+const FILES = ["./","index.html","astro.js","chart.js","native.js","chinese.js","numerology.js","texts.js","quotes.js","consensus.js","daily.js",
+  "ui.js","draw.js","systems.js","app.js","manifest.webmanifest","icons/icon.svg","icons/icon-192.png","icons/icon-512.png","icons/icon-maskable-512.png","icons/apple-touch-icon.png"];
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(VERSION).then(c => Promise.all(FILES.map(f => c.add(f).catch(()=>{})))).then(() => self.skipWaiting()));
 });
