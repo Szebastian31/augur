@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Augur" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/augur_night</item>
+        <item name="android:statusBarColor">@color/augur_night</item>
+        <item name="android:navigationBarColor">@color/augur_night</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:colorAccent">#E8C77A</item>
+    </style>
+    <color name="augur_night">#0D0820</color>
+</resources>
