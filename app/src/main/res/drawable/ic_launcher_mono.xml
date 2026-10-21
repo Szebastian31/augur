@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- single-colour version for Android's themed icons: the staff, the star and the birds -->
+<!-- single-colour version for Android's themed icons: the front card, its star, orbit, moon and dots -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="1024"
     android:viewportHeight="1024">
-    <group android:scaleX="0.74" android:scaleY="0.74" android:translateX="148" android:translateY="118">
-        <path android:strokeColor="#FFFFFFFF" android:strokeWidth="14" android:strokeLineCap="round" android:strokeLineJoin="round"
-            android:pathData="M156,560 Q196,520 228,556 Q260,520 300,560M246,668 Q272,642 294,664 Q316,642 342,668" />
-        <path android:strokeColor="#FFFFFFFF" android:strokeWidth="60" android:strokeLineCap="round" android:strokeLineJoin="round"
-            android:pathData="M420,862 L420,452 C420,300 522,214 640,232 C750,250 788,372 722,438 C666,494 576,470 568,398 C562,344 614,316 654,344" />
+    <group android:scaleX="0.74" android:scaleY="0.74" android:translateX="133" android:translateY="140">
+        <group android:rotation="-7" android:pivotX="512" android:pivotY="486">
+            <path android:strokeColor="#FFFFFFFF" android:strokeWidth="22"
+                android:pathData="M382,206h260a60,60 0,0 1,60 60v440a60,60 0,0 1,-60 60h-260a60,60 0,0 1,-60 -60v-440a60,60 0,0 1,60 -60z" />
+            <path android:fillColor="#FFFFFFFF" android:pathData="M512.14,288A30,30 0,1 0,537.92 333.11A26,26 0,0 1,512.14 288Z" />
+            <path android:strokeColor="#FFFFFFFF" android:strokeWidth="18" android:strokeLineCap="round" android:trimPathEnd="0.68"
+                android:pathData="M512,376a124,124 0,1 1,0 248a124,124 0,1 1,0 -248" />
+            <path android:fillColor="#FFFFFFFF"
+                android:pathData="M512,424.6Q520.2,491.8 584.2,500Q520.2,508.2 512,575.4Q503.8,508.2 439.8,500Q503.8,491.8 512,424.6ZM470,680a8,8 0,1 0,16 0a8,8 0,1 0,-16 0zM504,680a8,8 0,1 0,16 0a8,8 0,1 0,-16 0zM538,680a8,8 0,1 0,16 0a8,8 0,1 0,-16 0z" />
+        </group>
     </group>
 </vector>

@@ -5,7 +5,7 @@
         <item name="android:statusBarColor">@color/augur_night</item>
         <item name="android:navigationBarColor">@color/augur_night</item>
         <item name="android:windowLightStatusBar">false</item>
-        <item name="android:colorAccent">#FFC996</item>
+        <item name="android:colorAccent">#FFCF9E</item>
     </style>
-    <color name="augur_night">#0B1433</color>
+    <color name="augur_night">#120A2E</color>
 </resources>

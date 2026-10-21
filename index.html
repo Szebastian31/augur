@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0b1433">
+<meta name="theme-color" content="#120a2e">
 <meta name="description" content="Your stars, four ways, and where they agree: Western, Native American and Chinese astrology and numerology.">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -16,10 +16,17 @@
 <style>
 :root{
   --page:#efe8da; --ink:#1d2230; --muted:#6c6a66;
-  --sky-top:#0b1433; --sky-mid:#22336b; --sky-bot:#3b2f72; --glow:rgba(255,190,140,.30);
-  --text:#eef3ff; --dim:rgba(238,243,255,.74); --faint:rgba(238,243,255,.5);
-  --card:rgba(255,255,255,.09); --card2:rgba(255,255,255,.14); --line:rgba(255,255,255,.16);
-  --gold:#ffc996; --gold2:#ffe2c4; --accent:#8fd6ff; --good:#5fe3a1; --bad:#ff8a80; --bg:#0b1433;
+  --sky-top:#120a2e; --sky-mid:#2b1a5c; --sky-bot:#5b2f7a; --glow:rgba(255,170,150,.32);
+  --text:#f4f0ff; --dim:rgba(244,240,255,.74); --faint:rgba(244,240,255,.5);
+  --card:rgba(255,255,255,.09); --card2:rgba(255,255,255,.12); --line:rgba(255,255,255,.14);
+  --gold:#ffcf9e; --gold2:#ffe6c8; --rose:#ff9fb4; --accent:#b9a8ff; --good:#5fe3a1; --bad:#ff8a80; --bg:#120a2e;
+  /* the gold-to-rose of the icon's orbit: numbers, the agreement ring, the main button */
+  --grad:linear-gradient(115deg,#ffe6b4 0%,#ffbf96 45%,#ff93ac 100%); --btn-ink:#2a1236;
+  /* frosted glass: a soft fill and a lit edge, brighter at the top left like the icon's cards */
+  --glass:linear-gradient(160deg,rgba(255,255,255,.14),rgba(255,255,255,.05) 55%,rgba(255,255,255,.09));
+  --edge:linear-gradient(160deg,rgba(255,255,255,.42),rgba(255,255,255,.07) 45%,rgba(255,255,255,.16));
+  --lift:0 22px 44px -22px rgba(6,3,28,.7);
+  --aurora1:rgba(255,140,170,.42); --aurora2:rgba(150,120,255,.40); --aurora3:rgba(255,205,150,.30);
   --fire:#ff9a78; --earth:#e9c46a; --air:#8fd6ff; --water:#a99bff;
   --wood:#6fd38e; --metal:#e6e2d8; --wateri:#7fa8ff;
   --display:ui-rounded,"SF Pro Rounded","SF Pro Display",-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,sans-serif;
@@ -28,10 +35,16 @@
   color-scheme:dark;
 }
 /* skins */
-.dawn{--sky-top:#1f2e78; --sky-mid:#5b4a9a; --sky-bot:#c97a7a; --glow:rgba(255,201,150,.55); --bg:#2a2a6e; --gold:#ffe0b8; --gold2:#fff1dc}
-.paper{--sky-top:#f6f0e4; --sky-mid:#efe6d4; --sky-bot:#e8dcc4; --glow:rgba(255,190,140,.35); --bg:#f6f0e4;
-  --text:#1d2230; --dim:rgba(29,34,48,.72); --faint:rgba(29,34,48,.5); --card:rgba(255,255,255,.55); --card2:rgba(40,30,10,.07); --line:rgba(40,30,10,.12);
-  --gold:#b4532a; --gold2:#8a3d1c; --accent:#2f6fb5; --good:#2f9d68; --bad:#c0392b;
+.dawn{--sky-top:#2a1b6a; --sky-mid:#77479a; --sky-bot:#e0828e; --glow:rgba(255,205,150,.55); --bg:#2a1b6a; --gold:#ffe2bc; --gold2:#fff2de;
+  --aurora1:rgba(255,170,150,.45); --aurora2:rgba(190,140,255,.35); --aurora3:rgba(255,225,170,.40)}
+.paper{--sky-top:#f7f1e6; --sky-mid:#f1e7d8; --sky-bot:#ecdcca; --glow:rgba(255,180,150,.35); --bg:#f7f1e6;
+  --text:#22182e; --dim:rgba(34,24,46,.72); --faint:rgba(34,24,46,.5); --card:rgba(255,255,255,.6); --card2:rgba(60,30,40,.06); --line:rgba(60,30,40,.11);
+  --gold:#b4532a; --gold2:#8a3d1c; --rose:#c2416b; --accent:#6a52c7; --good:#2f9d68; --bad:#c0392b;
+  --grad:linear-gradient(115deg,#c0662e 0%,#c24a54 55%,#a8376e 100%); --btn-ink:#fff;
+  --glass:linear-gradient(160deg,rgba(255,255,255,.86),rgba(255,255,255,.58));
+  --edge:linear-gradient(160deg,#fff,rgba(60,30,40,.1) 60%,rgba(60,30,40,.06));
+  --lift:0 20px 40px -24px rgba(80,40,30,.35);
+  --aurora1:rgba(255,160,150,.30); --aurora2:rgba(170,140,255,.18); --aurora3:rgba(255,210,150,.30);
   --fire:#d9603b; --earth:#b08a2a; --air:#2f8fc7; --water:#5b5fc7; --metal:#8a8070; color-scheme:light}
 
 *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent}
@@ -64,6 +77,16 @@ button,input,select{font-family:inherit}
 .glow{position:absolute; left:-30%; right:-30%; bottom:-34%; height:62%; pointer-events:none; z-index:0; background:radial-gradient(closest-side,var(--glow),transparent)}
 .hills{position:absolute; left:0; right:0; bottom:0; height:140px; pointer-events:none; z-index:0; opacity:.55}
 .paper .hills{opacity:.18}
+/* slow aurora behind everything, and a fine film grain on top of the sky */
+.aurora{position:absolute; inset:-25%; z-index:0; pointer-events:none; filter:blur(48px)}
+.aurora i{position:absolute; border-radius:50%; animation:drift 28s ease-in-out infinite alternate}
+.aurora i:nth-child(1){width:70%; height:46%; left:2%; top:14%; background:radial-gradient(closest-side,var(--aurora2),transparent)}
+.aurora i:nth-child(2){width:62%; height:42%; right:0; top:34%; background:radial-gradient(closest-side,var(--aurora1),transparent); animation-duration:34s; animation-delay:-12s}
+.aurora i:nth-child(3){width:56%; height:34%; left:22%; bottom:6%; background:radial-gradient(closest-side,var(--aurora3),transparent); animation-duration:40s; animation-delay:-20s}
+@keyframes drift{from{transform:translate3d(-6%,-3%,0) scale(1)} to{transform:translate3d(7%,5%,0) scale(1.14)}}
+.screen::after{content:""; position:absolute; inset:0; z-index:1; pointer-events:none; opacity:.09; mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+.paper .screen::after{opacity:.05; mix-blend-mode:multiply}
 @media (max-width:560px){
   body{padding:0; gap:0; background:var(--sky-top)} body::before,.side{display:none}
   html,body{overscroll-behavior:none}
@@ -75,8 +98,12 @@ button,input,select{font-family:inherit}
 /* scroll area */
 main{position:absolute; inset:0; z-index:2; overflow-y:auto; padding:58px 18px 130px; scrollbar-width:none; overscroll-behavior:contain}
 main::-webkit-scrollbar{display:none}
-.view{display:none} .view.on{display:block; animation:fade .3s ease}
-@keyframes fade{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none}}
+.view{display:none} .view.on{display:block}
+/* each block rises in, one after another */
+.view.on > *{animation:rise .6s cubic-bezier(.2,.8,.2,1) backwards}
+.view.on > *:nth-child(2){animation-delay:.05s} .view.on > *:nth-child(3){animation-delay:.1s} .view.on > *:nth-child(4){animation-delay:.15s}
+.view.on > *:nth-child(5){animation-delay:.2s} .view.on > *:nth-child(6){animation-delay:.25s} .view.on > *:nth-child(n+7){animation-delay:.3s}
+@keyframes rise{from{opacity:0; transform:translateY(14px) scale(.985)} to{opacity:1; transform:none}}
 
 /* type */
 h1,h2,h3{font-family:var(--display); font-weight:800; letter-spacing:-.6px; line-height:1.1}
@@ -95,54 +122,59 @@ p{margin:.35em 0}
 .badge i{width:7px; height:7px; border-radius:50%; background:var(--gold); box-shadow:0 0 8px var(--gold)}
 
 /* cards */
-.card{border-radius:24px; padding:16px; background:var(--card); border:1px solid var(--line); margin:0 0 12px;
-  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 10px 30px rgba(5,10,40,.12)}
-.paper .card{box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 10px 30px rgba(60,40,10,.06)}
-.card .label{font-size:10.5px; font-weight:700; letter-spacing:1.4px; text-transform:uppercase; color:var(--faint); margin-bottom:10px; display:flex; justify-content:space-between; gap:8px}
-.tap{cursor:pointer} .card.tap:active{transform:scale(.99)}
+.card,.big3 .cell,.numbers .nb{background:var(--glass) padding-box,var(--edge) border-box; border:1px solid transparent;
+  backdrop-filter:blur(16px) saturate(1.2); -webkit-backdrop-filter:blur(16px) saturate(1.2); box-shadow:var(--lift)}
+.card{border-radius:26px; padding:18px; margin:0 0 12px}
+.card .label{font-size:10.5px; font-weight:700; letter-spacing:1.6px; text-transform:uppercase; color:var(--faint); margin-bottom:12px; display:flex; justify-content:space-between; gap:8px}
+/* numbers and the day's word in the gold-to-rose of the icon */
+.ring-n,.tone,.lucky,.numbers .v,.trait .n,.quote::before{background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent}
+.tap{cursor:pointer} .card.tap{transition:transform .2s ease} .card.tap:active{transform:scale(.985)}
 .row{display:flex; gap:10px; align-items:center} .wrap{flex-wrap:wrap} .between{justify-content:space-between} .grow{flex:1; min-width:0}
 .grid2{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin-bottom:12px} .grid3{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px}
 .chev::after{content:"›"; color:var(--faint); font-size:18px; line-height:1}
 .sw{display:inline-block; width:16px; height:16px; border-radius:50%; vertical-align:-3px; margin-right:6px; box-shadow:0 0 0 1px var(--line)}
 
 /* today hero: the agreement ring */
-.hero{text-align:center; padding:4px 6px 18px}
-.ringwrap{position:relative; width:190px; height:190px; margin:0 auto 10px}
+.hero{text-align:center; padding:6px 6px 20px}
+.ringwrap{position:relative; width:196px; height:196px; margin:0 auto 14px; isolation:isolate}
+.ringwrap::before{content:""; position:absolute; inset:6px; border-radius:50%; z-index:-1; filter:blur(22px); opacity:.75;
+  background:conic-gradient(from 210deg,transparent,var(--aurora3),var(--aurora1),transparent 70%)}
 .ring{width:100%; height:100%; display:block}
-.ring-track{fill:none; stroke:var(--line); stroke-width:12}
-.ring-seg{fill:none; stroke:var(--card2); stroke-width:12; stroke-linecap:round}
-.ring-seg.on{stroke:var(--gold); filter:drop-shadow(0 0 6px var(--gold))}
+.ring-track{fill:none; stroke:var(--line); stroke-width:10}
+.ring-seg{fill:none; stroke:var(--card2); stroke-width:10; stroke-linecap:round}
+.ring-seg.on{stroke:url(#ring-grad); filter:drop-shadow(0 0 7px rgba(255,170,160,.7))}
+.paper .ring-seg.on{filter:none}
+.paper #ring-grad stop:nth-child(1){stop-color:#c0662e} .paper #ring-grad stop:nth-child(2){stop-color:#c24a54} .paper #ring-grad stop:nth-child(3){stop-color:#a8376e}
 .ring-in{position:absolute; inset:28px; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center;
-  background:linear-gradient(135deg,rgba(255,255,255,.22),rgba(255,255,255,.05) 55%,rgba(255,255,255,.12)); border:1px solid rgba(255,255,255,.3);
-  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); box-shadow:0 18px 40px rgba(5,10,40,.35)}
-.paper .ring-in{background:rgba(255,255,255,.7); border-color:rgba(40,30,10,.1); box-shadow:0 18px 40px rgba(60,40,10,.12)}
-.ring-n{font-family:var(--display); font-weight:800; font-size:54px; letter-spacing:-2px; line-height:1}
-.ring-n small{font-size:22px; color:var(--faint); letter-spacing:0; margin-left:2px}
-.ring-l{font-size:11px; font-weight:700; letter-spacing:1.6px; text-transform:uppercase; color:var(--faint); margin-top:4px}
-.kicker{font-size:10.5px; font-weight:700; letter-spacing:1.6px; text-transform:uppercase; color:var(--faint)}
-.tone{font-family:var(--display); font-weight:800; font-size:38px; letter-spacing:-1.4px; line-height:1.1; margin:4px 0 2px; color:var(--gold2)}
-.paper .tone{color:var(--gold)}
+  background:var(--glass) padding-box,var(--edge) border-box; border:1px solid transparent;
+  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); box-shadow:0 22px 44px -16px rgba(6,3,28,.65)}
+.paper .ring-in{box-shadow:0 18px 40px -18px rgba(80,40,30,.3)}
+.ring-n{font-family:var(--display); font-weight:800; font-size:56px; letter-spacing:-2.4px; line-height:1}
+.ring-n small{font-size:22px; letter-spacing:0; margin-left:2px; opacity:.6}
+.ring-l{font-size:10.5px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase; color:var(--faint); margin-top:5px}
+.kicker{font-size:10.5px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase; color:var(--faint)}
+.tone{font-family:var(--serif); font-style:italic; font-weight:500; font-size:42px; letter-spacing:-1px; line-height:1.08; margin:6px 0 4px; padding:0 4px}
 .tone-t{font-family:var(--serif); font-size:16px; color:var(--dim); margin-bottom:6px}
 
 .vote{display:flex; gap:10px; padding:10px 0; border-top:1px solid var(--line)} .vote:first-child{border-top:0}
 .vote .sys{width:86px; flex:none; font-size:10.5px; font-weight:700; color:var(--faint); text-transform:uppercase; letter-spacing:1px; padding-top:3px}
 .vote .t{font-family:var(--display); font-weight:700} .vote .t.match{color:var(--gold)}
 .trait{display:flex; align-items:center; gap:12px; padding:11px 0; border-top:1px solid var(--line)} .trait:first-of-type{border-top:0}
-.trait .n{font-family:var(--display); font-weight:800; font-size:20px; letter-spacing:-.5px; color:var(--gold); width:44px; flex:none; text-align:center}
+.trait .n{font-family:var(--display); font-weight:800; font-size:20px; letter-spacing:-.5px; width:44px; flex:none; text-align:center}
 .trait b{font-family:var(--display); font-weight:700}
 .dots{display:inline-flex; gap:3px; vertical-align:1px; margin-left:4px} .dots i{width:6px; height:6px; border-radius:50%; background:var(--card2)} .dots i.on{background:var(--gold)}
 
 .ratings .r{display:flex; align-items:center; gap:8px; margin:7px 0} .ratings .r span:first-child{width:50px; color:var(--dim); font-size:12.5px}
 .ratings .r span:last-child{width:10px; text-align:right; font-family:var(--display); font-weight:700}
-.bar{flex:1; height:6px; border-radius:3px; background:var(--card2); overflow:hidden} .bar i{display:block; height:100%; border-radius:3px; background:linear-gradient(90deg,var(--accent),var(--gold))}
-.lucky{font-family:var(--display); font-weight:800; font-size:52px; letter-spacing:-2px; line-height:1; color:var(--gold)}
+.bar{flex:1; height:6px; border-radius:3px; background:var(--card2); overflow:hidden} .bar i{display:block; height:100%; border-radius:3px; background:var(--grad); box-shadow:0 0 10px rgba(255,160,160,.45)}
+.lucky{font-family:var(--display); font-weight:800; font-size:52px; letter-spacing:-2px; line-height:1}
 .quote-card{text-align:center; padding:20px 18px}
 .quote{font-family:var(--serif); font-style:italic; font-size:20px; line-height:1.42}
-.quote::before{content:"“"; display:block; font-size:44px; line-height:.6; color:var(--gold); margin:6px 0 8px; font-style:normal}
+.quote::before{content:"“"; display:block; font-size:44px; line-height:.6; margin:6px 0 8px; font-style:normal}
 .by{margin-top:10px; color:var(--faint); font-size:11px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase}
 
 /* me */
-.big3 .cell{background:var(--card); border:1px solid var(--line); border-radius:20px; padding:14px 8px 12px; text-align:center; backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px)}
+.big3 .cell{border-radius:22px; padding:14px 8px 12px; text-align:center}
 .big3 .glyph{font-family:var(--serif); font-size:30px; color:var(--gold); line-height:1.15}
 .big3 .what{font-size:10px; font-weight:700; color:var(--faint); text-transform:uppercase; letter-spacing:1.3px}
 .big3 .sign{font-family:var(--display); font-weight:700; font-size:16px; letter-spacing:-.3px}
@@ -169,17 +201,19 @@ table.list td.r{text-align:right; color:var(--dim); white-space:nowrap}
 .pillars .lab{font-size:10px; font-weight:700; letter-spacing:1.1px; text-transform:uppercase; color:var(--faint)}
 .el-wood{color:var(--wood)} .el-fire{color:var(--fire)} .el-earth{color:var(--earth)} .el-metal{color:var(--metal)} .el-water{color:var(--wateri)}
 .numbers{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-bottom:12px}
-.numbers .nb{background:var(--card); border:1px solid var(--line); border-radius:18px; padding:12px 6px; text-align:center; backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px)}
-.numbers .v{font-family:var(--display); font-weight:800; font-size:30px; letter-spacing:-1px; color:var(--gold); line-height:1.1}
+.numbers .nb{border-radius:20px; padding:12px 6px; text-align:center}
+.numbers .v{font-family:var(--display); font-weight:800; font-size:30px; letter-spacing:-1px; line-height:1.1}
 .numbers .k{font-size:10px; font-weight:700; color:var(--faint); text-transform:uppercase; letter-spacing:1px}
 .pill{display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:10px; background:var(--card2); font-size:12px; color:var(--dim); font-weight:600}
 
 /* buttons & forms */
 .btn{display:inline-flex; align-items:center; justify-content:center; gap:6px; width:100%; padding:15px; border-radius:16px; border:0; cursor:pointer;
-  background:var(--text); color:var(--sky-top); font-weight:700; font-size:15.5px; letter-spacing:-.1px; transition:transform .12s}
+  background:var(--grad); color:var(--btn-ink); font-weight:700; font-size:15.5px; letter-spacing:-.1px; transition:transform .12s,box-shadow .2s;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 14px 30px -12px rgba(255,140,165,.75)}
+.paper .btn{box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 14px 28px -14px rgba(168,55,110,.6)}
 .btn:active{transform:scale(.97)} .btn:disabled{opacity:.4}
-.btn.ghost{background:var(--card); color:var(--text); border:1px solid var(--line)}
-.btn.danger{background:rgba(255,138,128,.14); color:var(--bad); border:1px solid rgba(255,138,128,.3)}
+.btn.ghost{background:var(--glass) padding-box,var(--edge) border-box; color:var(--text); border:1px solid transparent; box-shadow:none}
+.btn.danger{background:rgba(255,138,128,.14); color:var(--bad); border:1px solid rgba(255,138,128,.3); box-shadow:none}
 .btn.small{width:auto; padding:9px 14px; font-size:13px; border-radius:12px}
 .link{background:none; border:0; color:var(--gold); font:inherit; font-weight:600; padding:0; cursor:pointer}
 .field{margin:14px 0} .field label{display:block; font-size:10.5px; font-weight:700; letter-spacing:1.3px; text-transform:uppercase; color:var(--faint); margin-bottom:7px}
@@ -195,37 +229,41 @@ select option{background:var(--bg); color:var(--text)}
 .results button:first-child{border-top:0} .results button small{color:var(--faint); display:block}
 .chosen{display:flex; align-items:center; gap:10px; background:var(--card2); border:1px solid var(--gold); border-radius:14px; padding:10px 12px; margin-top:8px}
 .welcome{text-align:center; padding:20px 0 8px}
-.welcome img{width:96px; height:96px; border-radius:24px; box-shadow:0 20px 50px rgba(5,10,40,.45)}
-.welcome h1{font-size:44px; letter-spacing:-1.8px; margin-top:16px}
+.welcome img{width:104px; height:104px; border-radius:26px; box-shadow:0 0 0 1px rgba(255,255,255,.18),0 24px 60px -10px rgba(6,3,28,.7),0 0 80px -10px rgba(255,150,170,.45); animation:float 7s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-6px)}}
+.welcome h1{font-family:var(--serif); font-weight:500; font-size:50px; letter-spacing:-1px; margin-top:18px}
 .welcome p{font-family:var(--serif); font-size:17px; color:var(--dim); margin-top:6px}
 .privacy{display:flex; gap:12px; align-items:flex-start; font-size:13px; line-height:1.5}
 .privacy .lock{width:30px; height:30px; border-radius:50%; flex:none; display:grid; place-items:center; background:var(--card2); border:1px solid var(--line)}
 .privacy .lock svg{width:15px; height:15px; stroke:var(--gold); fill:none; stroke-width:1.8; stroke-linecap:round}
 .privacy a{color:var(--gold)}
 
-/* tab bar, like Hora */
-nav.bar{position:absolute; left:0; right:0; bottom:0; height:84px; padding:10px 12px 30px; display:flex; justify-content:space-around; z-index:20;
-  background:color-mix(in srgb,var(--sky-top) 72%,transparent); backdrop-filter:blur(20px) saturate(1.3); -webkit-backdrop-filter:blur(20px) saturate(1.3); border-top:1px solid var(--line)}
+/* tab bar: a floating glass pill, like Hora's bar lifted off the edge */
+nav.bar{position:absolute; left:14px; right:14px; bottom:16px; height:66px; padding:8px 6px; display:flex; justify-content:space-around; align-items:center; z-index:20; border-radius:26px;
+  background:color-mix(in srgb,var(--sky-top) 58%,transparent) padding-box,var(--edge) border-box; border:1px solid transparent;
+  backdrop-filter:blur(24px) saturate(1.4); -webkit-backdrop-filter:blur(24px) saturate(1.4); box-shadow:0 18px 40px -14px rgba(6,3,28,.7)}
+.paper nav.bar{background:rgba(255,255,255,.72) padding-box,var(--edge) border-box; box-shadow:0 16px 36px -18px rgba(80,40,30,.35)}
 nav.bar .in{display:contents}
-nav.bar button{display:flex; flex-direction:column; align-items:center; gap:4px; font-size:10.5px; font-weight:600; color:var(--faint); cursor:pointer; position:relative; width:72px; border:0; background:none; z-index:0}
+nav.bar button{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; height:50px; font-size:10.5px; font-weight:600; color:var(--faint); cursor:pointer; position:relative; width:76px; border:0; background:none; z-index:0; transition:color .2s}
 nav.bar svg{width:22px; height:22px; stroke:currentColor; fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; transition:transform .25s}
 nav.bar button.on{color:var(--text)}
-nav.bar button.on svg{transform:translateY(-1px) scale(1.08)}
-nav.bar button.on::before{content:""; position:absolute; top:-6px; width:52px; height:34px; border-radius:12px; background:var(--card); border:1px solid var(--line); z-index:-1}
-nav.bar button.on::after{content:""; position:absolute; bottom:-8px; width:4px; height:4px; border-radius:50%; background:var(--gold)}
-@media (max-width:560px){ nav.bar{height:calc(64px + env(safe-area-inset-bottom)); padding-bottom:calc(10px + env(safe-area-inset-bottom))} }
+nav.bar button.on svg{transform:scale(1.06)}
+nav.bar button.on::before{content:""; position:absolute; inset:0 4px; border-radius:18px; background:var(--card2); z-index:-1}
+nav.bar button.on::after{content:""; position:absolute; top:5px; right:16px; width:5px; height:5px; border-radius:50%; background:var(--grad); box-shadow:0 0 8px var(--rose)}
+@media (max-width:560px){ nav.bar{bottom:calc(10px + env(safe-area-inset-bottom))} }
 
 /* sheet */
-#sheet{position:absolute; inset:0; z-index:30; display:none; background:rgba(0,0,0,.3)}
+#sheet{position:absolute; inset:0; z-index:30; display:none; background:rgba(8,4,24,.42); backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px)}
 #sheet.on{display:block}
 #sheet .panel{position:absolute; left:0; right:0; bottom:0; max-height:88%; overflow-y:auto; scrollbar-width:none; padding:10px 20px 34px; border-radius:30px 30px 0 0;
-  background:linear-gradient(color-mix(in srgb,var(--sky-mid) 82%,#fff 6%),var(--sky-top)); border-top:1px solid var(--line); animation:up .38s cubic-bezier(.2,.9,.25,1)}
+  background:linear-gradient(color-mix(in srgb,var(--sky-mid) 86%,#fff 6%),color-mix(in srgb,var(--sky-top) 96%,transparent)) padding-box,var(--edge) border-box; border:1px solid transparent; border-bottom:0;
+  box-shadow:0 -20px 50px -20px rgba(6,3,28,.6); animation:up .42s cubic-bezier(.2,.9,.25,1)}
 #sheet .panel::-webkit-scrollbar{display:none}
 @keyframes up{from{transform:translateY(105%)} to{transform:none}}
 #sheet .grab{width:38px; height:5px; border-radius:3px; background:var(--faint); opacity:.6; margin:0 auto 14px}
 #sheet h2{font-size:28px} #sheet h3{margin-top:14px}
 #toast{position:absolute; left:50%; top:60px; transform:translateX(-50%); z-index:70; padding:9px 14px; border-radius:16px; font-size:13px; font-weight:600; background:var(--text); color:var(--sky-top); display:none; white-space:nowrap}
-@media (prefers-reduced-motion:reduce){ .view.on,#sheet .panel{animation:none} }
+@media (prefers-reduced-motion:reduce){ .view.on > *,#sheet .panel,.aurora i,.welcome img{animation:none} }
 @media print{ body{display:block; overflow:visible; padding:0} .side,nav.bar,.notch{display:none} .phone{width:auto; height:auto; max-height:none; padding:0; box-shadow:none; background:none}
   .screen,main{position:static; overflow:visible; height:auto; border-radius:0} }
 /* language */
@@ -265,6 +303,7 @@ nav.bar button.on::after{content:""; position:absolute; bottom:-8px; width:4px; 
 <div class="phone"><div class="screen" id="screen">
   <div class="notch"></div>
   <canvas id="stars"></canvas>
+  <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
   <div class="glow"></div>
   <svg class="hills" viewBox="0 0 390 140" preserveAspectRatio="none" aria-hidden="true">
     <path d="M0 70 Q195 40 390 70 V140 H0Z" fill="#170f33" opacity=".55"/><path d="M0 100 Q195 74 390 100 V140 H0Z" fill="#0d0a22" opacity=".7"/>

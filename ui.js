@@ -38,7 +38,8 @@ const toTop = () => { const m = $("#main"); if(m) m.scrollTop = 0; };
 // the agreement ring: one arc per system, lit when it agrees with the day's tone
 function agreeRing(votes, tone){
   const n = votes.length, gap = 10, R = 74, C = 2*Math.PI*R, seg = C/n - gap;
-  let s = `<svg viewBox="0 0 180 180" class="ring">`;
+  let s = `<svg viewBox="0 0 180 180" class="ring"><defs><linearGradient id="ring-grad" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#ffe6b4"/><stop offset=".5" stop-color="#ffbf96"/><stop offset="1" stop-color="#ff93ac"/></linearGradient></defs>`;
   s += `<circle cx="90" cy="90" r="${R}" class="ring-track"/>`;
   votes.forEach((v,i) => {
     s += `<circle cx="90" cy="90" r="${R}" class="ring-seg ${v.tone === tone ? "on" : ""}" stroke-dasharray="${seg.toFixed(1)} ${(C-seg).toFixed(1)}"

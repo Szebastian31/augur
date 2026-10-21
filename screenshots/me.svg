@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 844" width="390" height="844">
 <defs>
-  <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1433"/><stop offset=".62" stop-color="#22336b"/><stop offset="1" stop-color="#3b2f72"/></linearGradient>
+  <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#120a2e"/><stop offset=".62" stop-color="#2b1a5c"/><stop offset="1" stop-color="#5b2f7a"/></linearGradient>
   <radialGradient id="glow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffbe8c" stop-opacity=".34"/><stop offset="1" stop-color="#ffbe8c" stop-opacity="0"/></radialGradient>
   <clipPath id="scr"><rect x="12" y="12" width="366" height="820" rx="43"/></clipPath>
   <style>
     text{font-family:ui-rounded,"SF Pro Rounded","SF Pro Display",-apple-system,"Segoe UI",Roboto,sans-serif;fill:#eef3ff}
     .s{font-family:"New York","Iowan Old Style",Georgia,serif}
     .k{font-size:9.5px;font-weight:700;letter-spacing:1.3px;fill:#eef3ff;fill-opacity:.5}
-    .d{fill-opacity:.74} .f{fill-opacity:.5} .g{fill:#ffc996}
+    .d{fill-opacity:.74} .f{fill-opacity:.5} .g{fill:#ffcf9e}
     .card{fill:#fff;fill-opacity:.09;stroke:#fff;stroke-opacity:.16}
     .line{stroke:#fff;stroke-opacity:.16}
     .ic{fill:none;stroke:#eef3ff;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
@@ -40,19 +40,19 @@
   <g>
     <text x="62" y="320" text-anchor="middle" font-size="20" font-weight="800" class="g">3/4</text>
     <text x="92" y="310" font-size="14.5" font-weight="700">Harmonious</text>
-    <g fill="#ffc996"><circle cx="186" cy="306" r="3"/><circle cx="195" cy="306" r="3"/><circle cx="204" cy="306" r="3"/></g><circle cx="213" cy="306" r="3" fill="#fff" fill-opacity=".14"/>
+    <g fill="#ffcf9e"><circle cx="186" cy="306" r="3"/><circle cx="195" cy="306" r="3"/><circle cx="204" cy="306" r="3"/></g><circle cx="213" cy="306" r="3" fill="#fff" fill-opacity=".14"/>
     <text x="92" y="327" font-size="12" class="d">You look for balance, fairness and beauty.</text>
     <text x="92" y="342" font-size="10.5" class="f">Western · Native · Chinese</text>
     <path d="M40 358H350" class="line"/>
     <text x="62" y="392" text-anchor="middle" font-size="20" font-weight="800" class="g">2/4</text>
     <text x="92" y="382" font-size="14.5" font-weight="700">Curious</text>
-    <g fill="#ffc996"><circle cx="160" cy="378" r="3"/><circle cx="169" cy="378" r="3"/></g><g fill="#fff" fill-opacity=".14"><circle cx="178" cy="378" r="3"/><circle cx="187" cy="378" r="3"/></g>
+    <g fill="#ffcf9e"><circle cx="160" cy="378" r="3"/><circle cx="169" cy="378" r="3"/></g><g fill="#fff" fill-opacity=".14"><circle cx="178" cy="378" r="3"/><circle cx="187" cy="378" r="3"/></g>
     <text x="92" y="399" font-size="12" class="d">You want to know how everything works.</text>
     <text x="92" y="414" font-size="10.5" class="f">Western · Native</text>
     <path d="M40 430H350" class="line"/>
     <text x="62" y="464" text-anchor="middle" font-size="20" font-weight="800" class="g">2/4</text>
     <text x="92" y="454" font-size="14.5" font-weight="700">Caring</text>
-    <g fill="#ffc996"><circle cx="152" cy="450" r="3"/><circle cx="161" cy="450" r="3"/></g><g fill="#fff" fill-opacity=".14"><circle cx="170" cy="450" r="3"/><circle cx="179" cy="450" r="3"/></g>
+    <g fill="#ffcf9e"><circle cx="152" cy="450" r="3"/><circle cx="161" cy="450" r="3"/></g><g fill="#fff" fill-opacity=".14"><circle cx="170" cy="450" r="3"/><circle cx="179" cy="450" r="3"/></g>
     <text x="92" y="471" font-size="12" class="d">You look after people, and they feel safe.</text>
     <text x="92" y="486" font-size="10.5" class="f">Chinese · Numerology</text>
     <path d="M40 502H350" class="line"/>
@@ -71,13 +71,13 @@
   <text x="215" y="674" class="k">WESTERN</text><text x="215" y="698" font-size="17" font-weight="700">Mostly air</text><text x="215" y="716" font-size="12" class="d">mutable signs lead</text>
 
   <!-- tab bar -->
-  <rect x="12" y="748" width="366" height="84" fill="#0b1433" fill-opacity=".78"/><path d="M12 748.5H378" class="line"/>
+  <rect x="12" y="748" width="366" height="84" fill="#120a2e" fill-opacity=".78"/><path d="M12 748.5H378" class="line"/>
   <rect x="123.25" y="760" width="52" height="34" rx="12" class="card"/>
   <g class="ic" stroke-opacity=".5"><circle cx="57.75" cy="777" r="4"/><path d="M57.75 767.5v2M57.75 784.5v2M48.25 777h2M65.25 777h2"/>
     <circle cx="240.75" cy="777" r="9"/><circle cx="240.75" cy="777" r="4.5"/><circle cx="332.25" cy="773" r="4"/><path d="M324.25 786c1.5-4 4.5-6 8-6s6.5 2 8 6"/></g>
   <path class="ic" d="M149.25 767l1.9 5.6h6.1l-4.9 3.6 1.9 5.8-5-3.6-5 3.6 1.9-5.8-4.9-3.6h6.1z"/>
   <g font-size="10.5" font-weight="600" text-anchor="middle"><text x="57.75" y="807" class="f">Today</text><text x="149.25" y="807">Me</text><text x="240.75" y="807" class="f">Systems</text><text x="332.25" y="807" class="f">Profile</text></g>
-  <circle cx="149.25" cy="815" r="2" fill="#ffc996"/>
+  <circle cx="149.25" cy="815" r="2" fill="#ffcf9e"/>
 </g>
 <rect x="136" y="22" width="118" height="34" rx="17" fill="#000"/>
 </svg>
