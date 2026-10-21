@@ -10,27 +10,32 @@ const STEMS = [
   {name:"Geng",han:"庚", element:"metal", yang:true},  {name:"Xin", han:"辛", element:"metal", yang:false},
   {name:"Ren", han:"壬", element:"water", yang:true},  {name:"Gui", han:"癸", element:"water", yang:false},
 ];
+// stems keep their pinyin name unless a language has its own (Chinese, Japanese and Korean use the characters)
+STEMS.forEach((s, i) => { const py = s.name; Object.defineProperty(s, "name", {enumerable:true,
+  get(){ const own = L.t("stems"); return Array.isArray(own) ? own[i] : py; }}); });
 const ANIMALS = [
-  {name:"Rat",     han:"子", element:"water", traits:["curious","ambitious"],  text:"Quick-witted and resourceful. You notice opportunities before anyone else and you're good at making something out of very little."},
-  {name:"Ox",      han:"丑", element:"earth", traits:["grounded","precise"],   text:"Steady, patient and hard-working. People trust you because you do what you said you'd do, at your own pace."},
-  {name:"Tiger",   han:"寅", element:"wood",  traits:["bold","free"],          text:"Brave and restless. You'd rather take a risk than sit still, and you stand up for people who can't."},
-  {name:"Rabbit",  han:"卯", element:"wood",  traits:["harmonious","caring"],  text:"Gentle, tactful and observant. You make places calmer and you read a room better than most."},
-  {name:"Dragon",  han:"辰", element:"earth", traits:["proud","visionary"],    text:"Confident and big-hearted, with big plans. You bring energy into a room and expect a lot of yourself."},
-  {name:"Snake",   han:"巳", element:"fire",  traits:["intuitive","intense"],  text:"Thoughtful, private and perceptive. You trust your instincts and rarely say everything you know."},
-  {name:"Horse",   han:"午", element:"fire",  traits:["free","bold"],          text:"Lively, independent and always moving. You need freedom and you lift the mood wherever you go."},
-  {name:"Goat",    han:"未", element:"earth", traits:["intuitive","harmonious"], text:"Creative, kind and sensitive. You do your best work somewhere peaceful, among people you trust."},
-  {name:"Monkey",  han:"申", element:"metal", traits:["curious","free"],       text:"Clever, playful and inventive. You solve problems in ways nobody expected, and you get bored easily."},
-  {name:"Rooster", han:"酉", element:"metal", traits:["precise","proud"],      text:"Sharp, honest and well-organised. You notice details and you say what you think."},
-  {name:"Dog",     han:"戌", element:"earth", traits:["caring","grounded"],    text:"Loyal, fair and protective. You stick by your people and you can't stand injustice."},
-  {name:"Pig",     han:"亥", element:"water", traits:["caring","harmonious"],  text:"Generous, warm and easy-going. You enjoy life's pleasures and share them freely."},
+  {han:"子", element:"water", traits:["curious","ambitious"]},
+  {han:"丑", element:"earth", traits:["grounded","precise"]},
+  {han:"寅", element:"wood",  traits:["bold","free"]},
+  {han:"卯", element:"wood",  traits:["harmonious","caring"]},
+  {han:"辰", element:"earth", traits:["proud","visionary"]},
+  {han:"巳", element:"fire",  traits:["intuitive","intense"]},
+  {han:"午", element:"fire",  traits:["free","bold"]},
+  {han:"未", element:"earth", traits:["intuitive","harmonious"]},
+  {han:"申", element:"metal", traits:["curious","free"]},
+  {han:"酉", element:"metal", traits:["precise","proud"]},
+  {han:"戌", element:"earth", traits:["caring","grounded"]},
+  {han:"亥", element:"water", traits:["caring","harmonious"]},
 ];
+L.bind(ANIMALS, "chAnimals", ["name","text"]);
 const ELEMENTS = {
-  wood: {name:"Wood",  han:"木", traits:["visionary","caring"],  text:"growth, kindness and new beginnings"},
-  fire: {name:"Fire",  han:"火", traits:["bold","proud"],        text:"passion, warmth and visibility"},
-  earth:{name:"Earth", han:"土", traits:["grounded","caring"],   text:"stability, care and good sense"},
-  metal:{name:"Metal", han:"金", traits:["precise","ambitious"], text:"focus, standards and determination"},
-  water:{name:"Water", han:"水", traits:["intuitive","curious"], text:"wisdom, flexibility and depth"},
+  wood: {han:"木", traits:["visionary","caring"]},
+  fire: {han:"火", traits:["bold","proud"]},
+  earth:{han:"土", traits:["grounded","caring"]},
+  metal:{han:"金", traits:["precise","ambitious"]},
+  water:{han:"水", traits:["intuitive","curious"]},
 };
+L.bind(ELEMENTS, "chElements", ["name","text"]);
 const PRODUCES = {wood:"fire", fire:"earth", earth:"metal", metal:"water", water:"wood"};
 const CONTROLS = {wood:"earth", earth:"water", water:"fire", fire:"metal", metal:"wood"};
 const TRINES = [[0,4,8],[1,5,9],[2,6,10],[3,7,11]];

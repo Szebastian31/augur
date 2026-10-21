@@ -1,38 +1,26 @@
 (() => {
 // Today's reading, built from the real sky at noon today measured against your birth chart.
+// The sentences come from the current language (i18n/xx.js); the astrology decides which ones.
 const {norm360} = Astro;
 const {SIGNS, PLANETS, signOf, angDist, houseOf} = Chart;
-const {HOUSE_TEXT, ASPECT_TEXT, TONES} = Texts;
+const {HOUSE_TEXT, TONES} = Texts;
+const t = L.t;
 
-const MOOD = ["impatient and brave","calm and comfort-seeking","chatty and restless","tender and homesick","warm and playful","busy and particular",
-  "sociable and fair-minded","deep and private","upbeat and adventurous","serious and productive","friendly and a bit detached","dreamy and sensitive"];
-const GIFT = {
-  easy:{sun:"confidence comes easily around", moon:"your feelings are in tune with", mercury:"words come easily: a good day to talk about",
-        venus:"there's warmth and a little luck in", mars:"you've got the energy to act on", jupiter:"a lucky break is possible around", saturn:"slow, solid progress is possible with"},
-  hard:{sun:"egos may clash over", moon:"you may react strongly about", mercury:"watch for misunderstandings around",
-        venus:"watch for overspending or small frictions in", mars:"tempers may run short about", jupiter:"don't overdo it with", saturn:"expect delays or extra work around"},
-  blend:{sun:"the spotlight falls on", moon:"emotions gather around", mercury:"your mind keeps returning to", venus:"sweetness flows into",
-        mars:"there's a burst of energy in", jupiter:"things expand in", saturn:"it's time to get serious about"},
-};
-const NATAL_NOUN = {sun:"who you are and what you want", moon:"your feelings and home life", mercury:"your plans and conversations",
-  venus:"your relationships and money", mars:"your goals and energy", asc:"how you come across", mc:"your career and reputation"};
+const NATAL = ["sun","moon","mercury","venus","mars","asc","mc"];          // natal points transits are read against
 const ORB = {moon:4, sun:2.5, mercury:2.5, venus:2.5, mars:2.5, jupiter:1.5, saturn:1.5};
-const COLOUR = {wood:["green","#5fb36b"], fire:["red","#e0605a"], earth:["yellow","#e2c15b"], metal:["white and gold","#e8e4d8"], water:["deep blue","#4a78d6"]};
+const COLOUR = {wood:"#5fb36b", fire:"#e0605a", earth:"#e2c15b", metal:"#e8e4d8", water:"#4a78d6"};
 
-function phaseName(e){
-  const names = ["New Moon","Waxing crescent","First quarter","Waxing gibbous","Full Moon","Waning gibbous","Last quarter","Waning crescent"];
-  return names[Math.floor(norm360(e + 22.5)/45)%8];
-}
+const phaseName = e => t("phases")[Math.floor(norm360(e + 22.5)/45)%8];
 
 function transits(pos, natalPts){
   const out = [];
-  for(const t of Object.keys(ORB)){
-    for(const n of Object.keys(NATAL_NOUN)){
+  for(const tp of Object.keys(ORB)){
+    for(const n of NATAL){
       if(!natalPts[n]) continue;
-      const d = angDist(pos[t].lon, natalPts[n].lon);
+      const d = angDist(pos[tp].lon, natalPts[n].lon);
       for(const a of Chart.ASPECTS){
         const orb = Math.abs(d - a.angle);
-        if(orb <= ORB[t]){ out.push({t, n, aspect:a, orb, weight:(ORB[t]-orb)/ORB[t] * (t === "moon" ? 0.8 : 1)}); break; }
+        if(orb <= ORB[tp]){ out.push({t:tp, n, aspect:a, orb, weight:(ORB[tp]-orb)/ORB[tp] * (tp === "moon" ? 0.8 : 1)}); break; }
       }
     }
   }
@@ -57,11 +45,11 @@ function day(profile, chart, chi, now=new Date()){
     transits:transits(pos, chart.points),
     retro:["mercury","venus","mars","jupiter","saturn"].filter(k => pos[k].retro),
     ingress:Astro.BODIES.filter(k => k !== "node" && k !== "moon" && signOf(before[k].lon) !== signOf(after[k].lon)).map(k => ({k, sign:signOf(after[k].lon)})),
-    colour:COLOUR[dp.stem.element],
+    colourHex:COLOUR[dp.stem.element], colourName:t("luckColours." + dp.stem.element),
   };
   d.consensus = Consensus.daily(d);
   d.ratings = ratings(d);
-  d.reading = reading(d, chart);
+  d.reading = reading(d);
   d.lucky = Numerology.reduce(d.personalDay + now.getDate() + (d.moonHouse||1), false);
   return d;
 }
@@ -88,22 +76,21 @@ function ratings(d){
   return r;
 }
 
-function reading(d, chart){
+function reading(d){
   const p = [];
   const tone = TONES[d.consensus.tone];
   p.push(`<b>${tone.name}.</b> ${tone.text}`);
-  const h = HOUSE_TEXT[d.moonHouse-1];
-  p.push(`The Moon is in ${SIGNS[d.moonSign].name} today, so the mood is ${MOOD[d.moonSign]}. It's passing through your ${Consensus.ordinal(d.moonHouse)} house, which puts the focus on ${h.text}.`);
+  p.push(t("readMoon", {sign:SIGNS[d.moonSign].name, mood:t("moods")[d.moonSign], n:d.moonHouse, nth:L.ord(d.moonHouse), focus:HOUSE_TEXT[d.moonHouse-1].text}));
   const seen = new Set();
   for(const x of d.transits){
     if(seen.size >= 2) break;
     if(seen.has(x.t)) continue;
     seen.add(x.t);
-    const g = GIFT[x.aspect.kind][x.t];
-    p.push(`${PLANETS[x.t].name} ${ASPECT_TEXT[x.aspect.name]} your natal ${PLANETS[x.n].name}: ${g} ${NATAL_NOUN[x.n]}.`);
+    p.push(t("readTransit", {t:PLANETS[x.t].name, verb:x.aspect.verb, aspect:x.aspect.label, n:PLANETS[x.n].name,
+      gift:t(`gift.${x.aspect.kind}.${x.t}`), noun:t("natalNoun." + x.n)}));
   }
-  if(d.retro.includes("mercury")) p.push("Mercury is retrograde: double-check messages, plans and travel details, and give old projects a second look before starting new ones.");
-  for(const g of d.ingress) p.push(`${PLANETS[g.k].name} moves into ${SIGNS[g.sign].name} today.`);
+  if(d.retro.includes("mercury")) p.push(t("readMercury"));
+  for(const g of d.ingress) p.push(t("readIngress", {p:PLANETS[g.k].name, sign:SIGNS[g.sign].name}));
   return p;
 }
 

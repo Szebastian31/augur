@@ -4,26 +4,28 @@ const {norm360, sinD, cosD, R2D, D2R} = Astro;
 const T_ = "\uFE0E"; // text presentation, so phones don't turn the glyphs into emoji
 
 const SIGNS = [
-  {name:"Aries",       glyph:"♈"+T_, element:"fire",  mode:"cardinal", ruler:"mars"},
-  {name:"Taurus",      glyph:"♉"+T_, element:"earth", mode:"fixed",    ruler:"venus"},
-  {name:"Gemini",      glyph:"♊"+T_, element:"air",   mode:"mutable",  ruler:"mercury"},
-  {name:"Cancer",      glyph:"♋"+T_, element:"water", mode:"cardinal", ruler:"moon"},
-  {name:"Leo",         glyph:"♌"+T_, element:"fire",  mode:"fixed",    ruler:"sun"},
-  {name:"Virgo",       glyph:"♍"+T_, element:"earth", mode:"mutable",  ruler:"mercury"},
-  {name:"Libra",       glyph:"♎"+T_, element:"air",   mode:"cardinal", ruler:"venus"},
-  {name:"Scorpio",     glyph:"♏"+T_, element:"water", mode:"fixed",    ruler:"mars"},
-  {name:"Sagittarius", glyph:"♐"+T_, element:"fire",  mode:"mutable",  ruler:"jupiter"},
-  {name:"Capricorn",   glyph:"♑"+T_, element:"earth", mode:"cardinal", ruler:"saturn"},
-  {name:"Aquarius",    glyph:"♒"+T_, element:"air",   mode:"fixed",    ruler:"saturn"},
-  {name:"Pisces",      glyph:"♓"+T_, element:"water", mode:"mutable",  ruler:"jupiter"},
+  {glyph:"♈"+T_, element:"fire",  mode:"cardinal", ruler:"mars"},
+  {glyph:"♉"+T_, element:"earth", mode:"fixed",    ruler:"venus"},
+  {glyph:"♊"+T_, element:"air",   mode:"mutable",  ruler:"mercury"},
+  {glyph:"♋"+T_, element:"water", mode:"cardinal", ruler:"moon"},
+  {glyph:"♌"+T_, element:"fire",  mode:"fixed",    ruler:"sun"},
+  {glyph:"♍"+T_, element:"earth", mode:"mutable",  ruler:"mercury"},
+  {glyph:"♎"+T_, element:"air",   mode:"cardinal", ruler:"venus"},
+  {glyph:"♏"+T_, element:"water", mode:"fixed",    ruler:"mars"},
+  {glyph:"♐"+T_, element:"fire",  mode:"mutable",  ruler:"jupiter"},
+  {glyph:"♑"+T_, element:"earth", mode:"cardinal", ruler:"saturn"},
+  {glyph:"♒"+T_, element:"air",   mode:"fixed",    ruler:"saturn"},
+  {glyph:"♓"+T_, element:"water", mode:"mutable",  ruler:"jupiter"},
 ];
+L.bind(SIGNS, "signs", ["name"]);
 const PLANETS = {
-  sun:{name:"Sun",glyph:"☉"}, moon:{name:"Moon",glyph:"☽"}, mercury:{name:"Mercury",glyph:"☿"},
-  venus:{name:"Venus",glyph:"♀"+T_}, mars:{name:"Mars",glyph:"♂"+T_}, jupiter:{name:"Jupiter",glyph:"♃"},
-  saturn:{name:"Saturn",glyph:"♄"}, uranus:{name:"Uranus",glyph:"♅"}, neptune:{name:"Neptune",glyph:"♆"},
-  pluto:{name:"Pluto",glyph:"♇"}, node:{name:"North Node",glyph:"☊"},
-  asc:{name:"Ascendant",glyph:"AC"}, mc:{name:"Midheaven",glyph:"MC"},
+  sun:{glyph:"☉"}, moon:{glyph:"☽"}, mercury:{glyph:"☿"},
+  venus:{glyph:"♀"+T_}, mars:{glyph:"♂"+T_}, jupiter:{glyph:"♃"},
+  saturn:{glyph:"♄"}, uranus:{glyph:"♅"}, neptune:{glyph:"♆"},
+  pluto:{glyph:"♇"}, node:{glyph:"☊"},
+  asc:{glyph:"AC"}, mc:{glyph:"MC"},
 };
+L.bind(PLANETS, "planets", ["name"]);
 const ASPECTS = [
   {name:"conjunction", angle:0,   orb:8, glyph:"☌", kind:"blend"},
   {name:"sextile",     angle:60,  orb:5, glyph:"⚹", kind:"easy"},
@@ -31,6 +33,9 @@ const ASPECTS = [
   {name:"trine",       angle:120, orb:7, glyph:"△", kind:"easy"},
   {name:"opposition",  angle:180, orb:8, glyph:"☍", kind:"hard"},
 ];
+// translated aspect name ("trine") and reading verb ("flows easily with"); `name` stays the English key
+ASPECTS.forEach(a => Object.defineProperties(a, {
+  label:{get(){ return L.t("aspects." + a.name + ".name"); }}, verb:{get(){ return L.t("aspects." + a.name + ".verb"); }}}));
 
 const signOf = lon => Math.floor(norm360(lon)/30);
 function fmtDeg(lon, withSign=true){
@@ -78,7 +83,7 @@ function angles(date, lat, lon){
 }
 
 // ---- Houses
-const HOUSE_SYSTEMS = {placidus:"Placidus", whole:"Whole Sign", equal:"Equal", porphyry:"Porphyry"};
+const HOUSE_SYSTEMS = L.bind({placidus:{}, whole:{}, equal:{}, porphyry:{}}, "houseSystems", ["name"]);
 function raToLon(ra, eps){ return norm360(Math.atan2(sinD(ra), cosD(ra)*cosD(eps))*R2D); }
 function placidusCusp(ramc, eps, lat, fn){
   let lon = raToLon(fn(90, 90), eps);
@@ -156,14 +161,14 @@ function natal(profile, settings){
   const pos = Astro.positions(utc);
   const chart = {utc, conv, pos, timeKnown: !!known, lat, lon, notes:[]};
 
-  if(conv.ambiguous) chart.notes.push(`${profile.time} happened twice that night because the clocks went back. Augur uses the first one (summer time).`);
-  if(conv.gap) chart.notes.push(`${profile.time} didn't exist that day because the clocks jumped forward. Augur assumes winter time; check the time on your birth certificate.`);
+  if(conv.ambiguous) chart.notes.push({k:"noteTwice", v:{time:profile.time}});
+  if(conv.gap) chart.notes.push({k:"noteGap", v:{time:profile.time}});
 
   if(known){
     chart.angles = angles(utc, lat, lon);
     chart.points = {...pos, asc:{lon:chart.angles.asc}, mc:{lon:chart.angles.mc}};
     chart.houses = houses(settings.houseSystem || "placidus", chart.angles, lat);
-    if(chart.houses.system === "porphyry-fallback") chart.notes.push("Placidus houses don't work this close to the poles, so Augur is using Porphyry houses.");
+    if(chart.houses.system === "porphyry-fallback") chart.notes.push({k:"notePolar"});
     chart.risingCertainty = risingCertainty(utc, lat, lon, profile.timeMode === "approx" ? (profile.timeSpread||30) : 0);
   } else {
     chart.points = {...pos};

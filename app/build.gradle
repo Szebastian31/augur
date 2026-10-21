@@ -10,8 +10,8 @@ android {
         applicationId "com.augur.stars"
         minSdk 29
         targetSdk 34
-        versionCode 2
-        versionName "1.1.0"
+        versionCode 3
+        versionName "1.2.0"
     }
 
     buildTypes {
@@ -40,7 +40,7 @@ android {
 
 tasks.register('copyWebApp', Copy) {
     from(rootProject.projectDir) {
-        include 'index.html', 'astro.js', 'chart.js', 'native.js', 'chinese.js', 'numerology.js',
+        include 'index.html', 'i18n.js', 'i18n/*.js', 'astro.js', 'chart.js', 'native.js', 'chinese.js', 'numerology.js',
                 'texts.js', 'quotes.js', 'consensus.js', 'daily.js', 'ui.js', 'draw.js', 'systems.js', 'app.js', 'icons/icon.svg'
     }
     into "$buildDir/generated/augur-web/www"

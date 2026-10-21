@@ -228,20 +228,38 @@ nav.bar button.on::after{content:""; position:absolute; bottom:-8px; width:4px; 
 @media (prefers-reduced-motion:reduce){ .view.on,#sheet .panel{animation:none} }
 @media print{ body{display:block; overflow:visible; padding:0} .side,nav.bar,.notch{display:none} .phone{width:auto; height:auto; max-height:none; padding:0; box-shadow:none; background:none}
   .screen,main{position:static; overflow:visible; height:auto; border-radius:0} }
+/* language */
+.langpill-row{display:flex; justify-content:flex-end; margin:-4px 0 -6px}
+.langpill{display:inline-flex; align-items:center; gap:6px; border:1px solid var(--line); background:var(--card); color:var(--text); font-size:12.5px; font-weight:600;
+  padding:7px 12px; border-radius:14px; cursor:pointer; backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px)}
+.langpill::before{content:""; width:14px; height:14px; background:currentColor; opacity:.8;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18'/%3E%3C/svg%3E") center/contain no-repeat;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18'/%3E%3C/svg%3E") center/contain no-repeat}
+.langrow{display:flex; justify-content:space-between; align-items:center; width:100%; border:0; background:none; color:var(--text); font-size:15px; font-weight:600;
+  padding:11px 10px; border-radius:12px; cursor:pointer; text-align:start}
+.langrow + .langrow{border-top:1px solid var(--line)}
+.langrow.on{background:var(--card2); color:var(--gold)}
+.langbtn{display:flex; justify-content:space-between; align-items:center; width:100%; font-size:16px; color:var(--text); background:var(--card); border:1px solid var(--line);
+  border-radius:14px; padding:13px 14px; cursor:pointer; text-align:start}
+/* right-to-left (Arabic, Persian) */
+[dir="rtl"] .chev::after{content:"‹"}
+[dir="rtl"] .langpill-row{justify-content:flex-start}
+[dir="rtl"] table.list td.r{text-align:left}
+[dir="rtl"] .side .how li{padding-left:0; padding-right:18px} [dir="rtl"] .side .how li::before{left:auto; right:0}
 </style>
 </head>
 <body>
 <aside class="side">
   <div class="brand"><img src="icons/icon.svg" alt=""><h1>Augur</h1></div>
-  <p class="lede">Your stars, four ways, and where they agree.</p>
+  <p class="lede" data-i18n="tagline"></p>
   <ul class="how">
-    <li><b>Western</b> birth chart, worked out on your phone for the minute you were born.</li>
-    <li><b>Native American</b> Medicine Wheel totem, clan and spirit keeper.</li>
-    <li><b>Chinese</b> zodiac animal and Four Pillars.</li>
-    <li><b>Numerology</b> from your birth date and full name.</li>
-    <li>Like Consensus Weather averaging forecast models, Augur shows <b>where the systems agree</b>, about you and about today.</li>
+    <li data-i18n-html="sideWestern"></li>
+    <li data-i18n-html="sideNative"></li>
+    <li data-i18n-html="sideChinese"></li>
+    <li data-i18n-html="sideNumerology"></li>
+    <li data-i18n-html="sideAgree"></li>
   </ul>
-  <p class="fam">A sibling to Consensus Weather, Caelum and Hora.</p>
+  <p class="fam" data-i18n="sideFamily"></p>
 </aside>
 
 <div class="phone"><div class="screen" id="screen">
@@ -255,65 +273,61 @@ nav.bar button.on::after{content:""; position:absolute; bottom:-8px; width:4px; 
   <main id="main">
     <!-- first open -->
     <section id="onboard" class="view">
+      <div class="langpill-row"><button type="button" class="langpill" id="f-lang" dir="auto"></button></div>
       <div class="welcome">
         <img src="icons/icon.svg" alt="">
         <h1>Augur</h1>
-        <p>Your stars, four ways,<br>and where they agree.</p>
+        <p data-i18n-html="welcomeSub"></p>
       </div>
       <div class="card privacy">
         <div class="lock"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
-        <div>
-          <b>Your details stay on this phone.</b> Augur needs them to work out your chart and uses them for nothing else.
-          No account, no ads, no tracking. The only thing that leaves your phone is the town you type below, sent to the free
-          <a href="https://open-meteo.com/en/docs/geocoding-api" target="_blank" rel="noopener">Open-Meteo</a> place search to find its coordinates and time zone.
-        </div>
+        <div data-i18n-html="privacyCard"></div>
       </div>
       <form id="form" class="card" autocomplete="off">
         <div class="field" style="margin-top:2px">
-          <label for="f-birthname">Full name at birth</label>
-          <input id="f-birthname" required placeholder="e.g. Anna Maria Kowalska" autocapitalize="words">
-          <div class="hint">Numerology reads the name on your birth certificate: first, middle and last.</div>
+          <label for="f-birthname" data-i18n="fBirthName"></label>
+          <input id="f-birthname" required data-i18n-ph="fBirthNamePh" autocapitalize="words" dir="auto">
+          <div class="hint" data-i18n="fBirthNameHint"></div>
         </div>
         <div class="field">
-          <label for="f-name">Name you use now <span style="text-transform:none; letter-spacing:0; font-weight:500">(optional)</span></label>
-          <input id="f-name" placeholder="If it's different, e.g. after marriage" autocapitalize="words">
+          <label for="f-name"><span data-i18n="fName"></span> <span style="text-transform:none; letter-spacing:0; font-weight:500" data-i18n="optional"></span></label>
+          <input id="f-name" data-i18n-ph="fNamePh" autocapitalize="words" dir="auto">
         </div>
         <div class="field">
-          <label for="f-date">Date of birth</label>
+          <label for="f-date" data-i18n="fDate"></label>
           <input id="f-date" type="date" required min="1900-01-01">
         </div>
         <div class="field">
-          <label>Time of birth</label>
+          <label data-i18n="fTime"></label>
           <div class="seg" id="f-timemode">
-            <button type="button" data-v="exact" class="on">Exact</button>
-            <button type="button" data-v="approx">Roughly</button>
-            <button type="button" data-v="unknown">Don't know</button>
+            <button type="button" data-v="exact" class="on" data-i18n="tExact"></button>
+            <button type="button" data-v="approx" data-i18n="tApprox"></button>
+            <button type="button" data-v="unknown" data-i18n="tUnknown"></button>
           </div>
           <div class="row" id="f-timerow" style="margin-top:8px">
             <input id="f-time" type="time" class="grow" value="12:00">
             <select id="f-spread" style="width:auto; display:none">
-              <option value="15">± 15 min</option><option value="30" selected>± 30 min</option>
-              <option value="60">± 1 hour</option><option value="120">± 2 hours</option>
+              <option value="15"></option><option value="30" selected></option><option value="60"></option><option value="120"></option>
             </select>
           </div>
-          <div class="hint" id="f-timehint">The rising sign changes about every 2 hours, so the time matters. Birth certificates often have it.</div>
+          <div class="hint" id="f-timehint"></div>
         </div>
         <div class="field">
-          <label for="f-place">Place of birth</label>
-          <input id="f-place" placeholder="Start typing a town or city" autocapitalize="words">
+          <label for="f-place" data-i18n="fPlace"></label>
+          <input id="f-place" data-i18n-ph="fPlacePh" autocapitalize="words" dir="auto">
           <div class="results" id="f-results"></div>
           <div id="f-chosen"></div>
-          <div class="hint">No internet? <button type="button" class="link" id="f-manual">Enter coordinates yourself</button></div>
+          <div class="hint"><span data-i18n="noNet"></span> <button type="button" class="link" id="f-manual" data-i18n="manual"></button></div>
           <div id="f-manualbox" style="display:none">
             <div class="grid2" style="margin:8px 0 0">
-              <input id="f-lat" inputmode="decimal" placeholder="Latitude, e.g. 50.29">
-              <input id="f-lon" inputmode="decimal" placeholder="Longitude, e.g. 18.67">
+              <input id="f-lat" inputmode="decimal" data-i18n-ph="latPh">
+              <input id="f-lon" inputmode="decimal" data-i18n-ph="lonPh">
             </div>
             <select id="f-tz" style="margin-top:8px"></select>
           </div>
         </div>
-        <button class="btn" id="f-go" type="submit">Read my stars</button>
-        <p class="tiny faint" style="text-align:center; margin-top:10px">You can change or delete everything later in Profile.</p>
+        <button class="btn" id="f-go" type="submit" data-i18n="go"></button>
+        <p class="tiny faint" style="text-align:center; margin-top:10px" data-i18n="changeLater"></p>
       </form>
     </section>
 
@@ -324,16 +338,27 @@ nav.bar button.on::after{content:""; position:absolute; bottom:-8px; width:4px; 
   </main>
 
   <nav class="bar" id="nav" style="display:none"><div class="in">
-    <button data-v="today" class="on"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>Today</button>
-    <button data-v="me"><svg viewBox="0 0 24 24"><path d="M12 3l1.9 5.6H20l-4.9 3.6 1.9 5.8L12 14.4 7 18l1.9-5.8L4 8.6h6.1z"/></svg>Me</button>
-    <button data-v="systems"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><path d="M12 3v4.5M12 16.5V21M3 12h4.5M16.5 12H21"/></svg>Systems</button>
-    <button data-v="profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>Profile</button>
+    <button data-v="today" class="on"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span data-i18n="navToday"></span></button>
+    <button data-v="me"><svg viewBox="0 0 24 24"><path d="M12 3l1.9 5.6H20l-4.9 3.6 1.9 5.8L12 14.4 7 18l1.9-5.8L4 8.6h6.1z"/></svg><span data-i18n="navMe"></span></button>
+    <button data-v="systems"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><path d="M12 3v4.5M12 16.5V21M3 12h4.5M16.5 12H21"/></svg><span data-i18n="navSystems"></span></button>
+    <button data-v="profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg><span data-i18n="navProfile"></span></button>
   </div></nav>
 
   <div id="sheet"><div class="panel"><div class="grab"></div><div id="sheet-body"></div></div></div>
   <div id="toast"></div>
 </div></div>
 
+<!-- languages first: every module reads its words from them -->
+<script src="i18n.js"></script>
+<script src="i18n/en.js"></script>
+<script src="i18n/pl.js"></script><script src="i18n/de.js"></script><script src="i18n/uk.js"></script><script src="i18n/es.js"></script>
+<script src="i18n/fr.js"></script><script src="i18n/ru.js"></script><script src="i18n/zh.js"></script><script src="i18n/ja.js"></script>
+<script src="i18n/pt.js"></script><script src="i18n/nl.js"></script><script src="i18n/it.js"></script><script src="i18n/hi.js"></script>
+<script src="i18n/ar.js"></script><script src="i18n/el.js"></script><script src="i18n/cs.js"></script><script src="i18n/sv.js"></script>
+<script src="i18n/ko.js"></script><script src="i18n/id.js"></script><script src="i18n/bn.js"></script><script src="i18n/tr.js"></script>
+<script src="i18n/te.js"></script><script src="i18n/ro.js"></script><script src="i18n/hu.js"></script><script src="i18n/fi.js"></script>
+<script src="i18n/no.js"></script><script src="i18n/sk.js"></script><script src="i18n/sw.js"></script><script src="i18n/fa.js"></script>
+<script src="i18n/da.js"></script><script src="i18n/th.js"></script><script src="i18n/vi.js"></script><script src="i18n/bg.js"></script>
 <script src="astro.js"></script>
 <script src="chart.js"></script>
 <script src="native.js"></script>

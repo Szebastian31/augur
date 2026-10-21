@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- single-colour version for Android's themed icons: the ring and the star -->
+<!-- single-colour version for Android's themed icons: the staff, the star and the birds -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="1024"
     android:viewportHeight="1024">
-    <group android:scaleX="0.86" android:scaleY="0.86" android:translateX="71.7" android:translateY="107.8">
-        <path android:strokeColor="#FFFFFFFF" android:strokeWidth="30" android:strokeLineCap="round"
-            android:pathData="M546.95,131.8A340,340 0,0 1,850.2,435.05M850.2,504.95A340,340 0,0 1,546.95,808.2M477.05,808.2A340,340 0,0 1,173.8,504.95M173.8,435.05A340,340 0,0 1,477.05,131.8" />
-        <path android:fillColor="#FFFFFFFF"
-            android:pathData="M512,290 Q530,452 692,470 Q530,488 512,650 Q494,488 332,470 Q494,452 512,290Z" />
+    <group android:scaleX="0.74" android:scaleY="0.74" android:translateX="148" android:translateY="118">
+        <path android:strokeColor="#FFFFFFFF" android:strokeWidth="14" android:strokeLineCap="round" android:strokeLineJoin="round"
+            android:pathData="M156,560 Q196,520 228,556 Q260,520 300,560M246,668 Q272,642 294,664 Q316,642 342,668" />
+        <path android:strokeColor="#FFFFFFFF" android:strokeWidth="60" android:strokeLineCap="round" android:strokeLineJoin="round"
+            android:pathData="M420,862 L420,452 C420,300 522,214 640,232 C750,250 788,372 722,438 C666,494 576,470 568,398 C562,344 614,316 654,344" />
     </group>
 </vector>

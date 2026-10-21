@@ -48,7 +48,8 @@ No app store, no account, no ads. Get the **Android app**, or use Augur in any p
   - **Native American:** the Medicine Wheel. Your birth totem and its moon, plant, mineral and colour, your elemental clan (Turtle, Frog, Thunderbird or Butterfly) and your spirit keeper direction.
   - **Chinese:** your zodiac animal and element (by Lunar New Year), the Four Pillars (Ba Zi), your Day Master, element balance, best matches and clashes.
   - **Numerology:** Life Path, Expression, Soul Urge, Personality, Birthday, Maturity, and your Personal Year, Month and Day.
-- **🎨 Profile:** three looks (Night, Dawn, Paper), house system, and deleting all your data.
+- **🎨 Profile:** three looks (Night, Dawn, Paper), house system, language, and deleting all your data.
+- **🌍 33 languages,** the same set as Consensus Weather: English, Polish, German, Ukrainian, Spanish, French, Russian, Chinese, Japanese, Portuguese, Dutch, Italian, Hindi, Arabic, Greek, Czech, Swedish, Korean, Indonesian, Bengali, Turkish, Telugu, Romanian, Hungarian, Finnish, Norwegian, Slovak, Swahili, Persian, Danish, Thai, Vietnamese and Bulgarian. Augur opens in your phone's language and falls back to English; you can change it in Profile. Arabic and Persian read right to left.
 
 ## An honest note about accuracy
 
@@ -87,6 +88,7 @@ The interface is plain HTML, CSS and JavaScript, hosted on GitHub Pages. The And
 | `consensus.js` | Where the systems agree, about you and about today |
 | `daily.js` | Today's transits, the reading and the ratings |
 | `texts.js`, `quotes.js` | Everything Augur says |
+| `i18n.js`, `i18n/` | Language picking (saved choice, then phone language, then English) and one file per language |
 | `ui.js`, `draw.js`, `systems.js`, `app.js` | Screens, chart drawings, settings and navigation |
 | `manifest.webmanifest`, `sw.js` | Home-screen install and offline cache |
 | `icons/`, `icons.html` | App icon, and a page that exports the PNG icons |
@@ -94,7 +96,7 @@ The interface is plain HTML, CSS and JavaScript, hosted on GitHub Pages. The And
 | `app/` | Android app: WebView shell, share sheet, vibration, launcher icon |
 | `.github/workflows/build.yml` | Builds the APK and publishes it as a release |
 
-After changing any file, bump `VERSION` in `sw.js` so installed web copies update, and `versionName` + `versionCode` in `app/build.gradle` for a new APK release. If you add a `.js` file, add it to `index.html`, `sw.js` and the `copyWebApp` list in `app/build.gradle`.
+After changing any file, bump `VERSION` in `sw.js` so installed web copies update, and `versionName` + `versionCode` in `app/build.gradle` for a new APK release. If you add a `.js` file, add it to `index.html`, `sw.js` and the `copyWebApp` list in `app/build.gradle`. A new text goes into `i18n/en.js` first; other languages show the English until they get their own line.
 
 </details>
 

@@ -75,10 +75,10 @@ function medicineWheel(mine){
   s += `<circle r="80" style="fill:var(--bg)" fill-opacity=".35"/>`;
   s += `<path d="M0,-74V74M-74,0H74" style="stroke:var(--line)"/><circle r="22" fill="none" style="stroke:var(--line)"/>`;
   const D = [["N","Waboose",0,-52],["E","Wabun",52,0],["S","Shawnodese",0,52],["W","Mudjekeewis",-52,0]];
-  const myDir = Native.DIRECTIONS[Math.floor(mine/3)].name[0];
+  const myDir = ["E","S","W","N"][Math.floor(mine/3)];   // East rules Aries–Gemini, South Cancer–Virgo…
   for(const [k,n,x,y] of D){
     const on = k === myDir;
-    s += `<text x="${x}" y="${y-5}" text-anchor="middle" font-size="15" font-family="var(--display)" font-weight="700" style="fill:${on ? "var(--gold)" : "var(--dim)"}">${k}</text>`;
+    s += `<text x="${x}" y="${y-5}" text-anchor="middle" font-size="15" font-family="var(--display)" font-weight="700" style="fill:${on ? "var(--gold)" : "var(--dim)"}">${L.t("compass." + k)}</text>`;
     s += `<text x="${x}" y="${y+9}" text-anchor="middle" font-size="6.8" style="fill:var(--faint)">${n}</text>`;
   }
   return s + `</svg>`;
