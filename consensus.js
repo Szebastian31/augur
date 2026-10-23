@@ -22,8 +22,9 @@ function top(s){
   return list.filter(x => x[1] >= cut).map(x => x[0]);
 }
 
-function natal(profile, chart, nat, chi, num){
+function natal(profile, chart, nat, chi, num, egy, maya){
   const W = system("sysWestern"), V = system("sysNative"), C = system("sysChinese"), N = system("sysNumerology");
+  const E = system("sysEgyptian"), M = system("sysMayan");
   const sg = k => Chart.signOf(chart.points[k].lon);
   const chEl = e => Chinese.ELEMENTS[e].name;
 
@@ -49,7 +50,16 @@ function natal(profile, chart, nat, chi, num){
   const bday = +profile.date.slice(8,10);
   for(const tr of NUM[Numerology.reduce(num.birthday,false)].traits) N.add(tr, 0.5, t("rsBorn", {n:bday, nth:L.ord(bday)}));
 
-  const systems = [W,V,C,N];
+  // the god of your birthday leans two ways, its best matches a little
+  for(const tr of egy.traits) E.add(tr, 2, t("rsGod", {god:egy.god.name}));
+  for(const g of egy.match) for(const tr of Egyptian.GODS[g].traits) E.add(tr, 0.4, t("rsGodMatch", {god:Egyptian.GODS[g].name}));
+
+  // Mayan: the traditional day sign leads, the Dreamspell seal adds to it
+  const tr0 = maya.traditional, ds = maya.dreamspell;
+  for(const tr of tr0.nawal.traits) M.add(tr, 2, t("rsNawal", {n:tr0.number, sign:tr0.nawal.kiche}));
+  for(const tr of ds.nawal.traits) M.add(tr, 1, t("rsSeal", {seal:ds.nawal.seal, kin:ds.kin}));
+
+  const systems = [W,V,C,N,E,M];
   const tops = systems.map(top);
   const votes = Object.keys(TRAITS).map(trait => {
     const who = systems.filter((s,i) => tops[i].includes(trait));
@@ -66,10 +76,11 @@ function natal(profile, chart, nat, chi, num){
     if(absent.length >= 2) disagreement = {trait:first, system:s.name, why:s.why[first].join(", "), absent:absent.map(o=>o.name)};
   });
 
-  return {votes, agreed:votes.filter(v=>v.count >= 2).slice(0,5), disagreement};
+  return {votes, agreed:votes.filter(v=>v.count >= 2).slice(0,5), disagreement, of:systems.length};
 }
 
-// ---- Today's tone. The Medicine Wheel describes who you are, not single days, so it doesn't vote here.
+// ---- Today's tone. The Medicine Wheel and the Egyptian gods describe who you are, not single days,
+// so they don't vote here.
 const HOUSE_TONE = [null,"push","steady","connect","reflect","create","steady","connect","reflect","push","steady","connect","reflect"];
 const RELATION_TONE = {companion:"connect", support:"reflect", expression:"create", opportunity:"push", pressure:"steady"};
 
@@ -82,6 +93,8 @@ function daily(day){
       + (day.clash ? t("voteClash", {animal:day.myAnimal}) : "")});
   votes.push({system:t("sysNumerology"), tone:Numerology.CYCLE[day.personalDay].tone,
     why:t("voteNumerology", {n:day.personalDay, text:Numerology.CYCLE[day.personalDay].text})});
+  votes.push({system:t("sysMayan"), tone:day.maya.nawal.tone,
+    why:t("voteMayan", {n:day.maya.number, sign:day.maya.nawal.kiche, text:day.maya.nawal.day})});
   const count = {};
   votes.forEach(v => count[v.tone] = (count[v.tone]||0) + 1);
   const ranked = Object.entries(count).sort((a,b)=>b[1]-a[1]);

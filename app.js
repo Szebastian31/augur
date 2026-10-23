@@ -21,14 +21,17 @@ function compute(){
   S.wheel = Native.native(S.chart);
   S.chi = Chinese.chinese(S.profile, S.chart);
   S.num = Numerology.numerology(S.profile);
-  S.nat = Consensus.natal(S.profile, S.chart, S.wheel, S.chi, S.num);
+  S.egy = Egyptian.egyptian(S.profile);
+  S.maya = Mayan.mayan(S.profile);
+  S.nat = Consensus.natal(S.profile, S.chart, S.wheel, S.chi, S.num, S.egy, S.maya);
   S.day = Daily.day(S.profile, S.chart, S.chi);
+  S.week = Week.week(S.profile, S.chart, S.chi);
   S.dayKey = todayKey();
 }
 function renderAll(){
   try{
     compute();
-    UI.renderToday(S); UI.renderMe(S); Systems.render(S); renderProfile();
+    UI.renderToday(S); UI.renderWeek(S); UI.renderMe(S); Systems.render(S); renderProfile();
   }catch(e){
     console.error(e);
     $("#v-today").innerHTML = `<div class="card"><h2>${t("errTitle")}</h2><p class="dim small">${esc(t("errBody", {msg:e.message}))}</p></div>`;

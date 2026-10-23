@@ -84,5 +84,37 @@ function medicineWheel(mine){
   return s + `</svg>`;
 }
 
-window.Draw = {wheel, medicineWheel};
+// A Maya numeral, as the Maya wrote 1–13: a dot for each one, a bar for each five, dots on top
+function mayaNumber(n, size=40){
+  const bars = Math.floor(n / 5), dots = n % 5;
+  const rows = bars + (dots ? 1 : 0), h = rows * 9 - 3, y0 = (40 - h) / 2;
+  let s = `<svg class="maya-n" viewBox="0 0 40 40" width="${size}" height="${size}" fill="currentColor" aria-label="${n}">`;
+  if(dots){
+    const w = dots * 8 - 2;
+    for(let i = 0; i < dots; i++) s += `<circle cx="${(40 - w)/2 + 3 + i*8}" cy="${y0 + 3}" r="3"/>`;
+  }
+  for(let i = 0; i < bars; i++) s += `<rect x="6" y="${y0 + (dots ? 9 : 0) + i*9}" width="28" height="6" rx="3"/>`;
+  return s + `</svg>`;
+}
+
+// an ankh, the Egyptian sign of life
+function ankh(size=24){
+  return `<svg class="ankh" viewBox="0 0 24 24" width="${size}" height="${size}" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <ellipse cx="12" cy="6.5" rx="3.6" ry="4.4"/><path d="M12 11v11M5.5 12.5h13"/></svg>`;
+}
+
+// the god's name in a cartouche, the rope oval Egyptians drew around royal and divine names
+function cartouche(name, hex){
+  return `<svg class="cartouche" viewBox="0 0 120 220" aria-hidden="true">
+    <defs><linearGradient id="cart-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${hex}" stop-opacity=".55"/><stop offset="1" stop-color="${hex}" stop-opacity=".12"/></linearGradient></defs>
+    <rect x="14" y="8" width="92" height="186" rx="46" fill="url(#cart-g)" stroke="var(--gold)" stroke-width="2.5"/>
+    <rect x="22" y="16" width="76" height="170" rx="38" fill="none" stroke="var(--gold)" stroke-opacity=".45" stroke-width="1"/>
+    <path d="M30 206h60M44 194v12M76 194v12" stroke="var(--gold)" stroke-width="2.5" stroke-linecap="round"/>
+    <g transform="translate(60 62)" fill="none" stroke="var(--gold)" stroke-width="2.2" stroke-linecap="round">
+      <ellipse cx="0" cy="-8" rx="7" ry="9"/><path d="M0 1v28M-14 4h28"/></g>
+    <text x="60" y="140" text-anchor="middle" font-family="var(--serif)" font-style="italic" font-size="${name.length > 7 ? 15 : 19}" style="fill:var(--text)">${name}</text>
+  </svg>`;
+}
+
+window.Draw = {wheel, medicineWheel, mayaNumber, ankh, cartouche};
 })();
