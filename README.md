@@ -95,7 +95,7 @@ The interface is plain HTML, CSS and JavaScript, hosted on GitHub Pages. The And
 | `consensus.js` | Where the systems agree, about you and about today |
 | `daily.js` | A day's transits, the reading and the ratings for every area of life |
 | `week.js` | The week ahead: its shape, best and hardest days, moments and every area of life |
-| `texts.js`, `quotes.js` | Everything Augur says, and a quote for each of the 366 days of the year (17 languages; the rest rotate through 60) |
+| `texts.js`, `quotes.js` | Everything Augur says, and a quote for each of the 366 days of the year, in all 33 languages |
 | `i18n.js`, `i18n/` | Language picking (saved choice, then phone language, then English) and one file per language |
 | `ui.js`, `draw.js`, `systems.js`, `app.js` | Screens, chart drawings, settings and navigation |
 | `manifest.webmanifest`, `sw.js` | Home-screen install and offline cache |
