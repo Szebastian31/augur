@@ -64,14 +64,14 @@ public class MainActivity extends Activity {
         });
         if (crash.exists()) { showCrash(crash); return; }
 
-        try { edgeToEdge(); } catch (Exception ignored) {}
-
         FrameLayout root = new FrameLayout(this);
         root.setBackgroundColor(Color.parseColor(NIGHT));
         web = new WebView(this);
         web.setBackgroundColor(Color.parseColor(NIGHT));
         root.addView(web, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
         setContentView(root);
+        // only after setContentView: ColorOS crashes if the bars are touched before the window has its decor view
+        try { edgeToEdge(); } catch (Exception ignored) {}
 
         // the page draws under the bars and pads itself; only the keyboard shrinks the WebView
         root.setOnApplyWindowInsetsListener((v, ins) -> {
@@ -227,16 +227,19 @@ public class MainActivity extends Activity {
 
     @SuppressWarnings("deprecation")
     private void applyBars() {
-        if (Build.VERSION.SDK_INT >= 30) {
-            WindowInsetsController c = getWindow().getInsetsController();
-            if (c == null) return;
-            int both = WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS | WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS;
-            c.setSystemBarsAppearance(lightBars ? both : 0, both);
-        } else {
-            int f = View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
-            if (lightBars) f |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
-            getWindow().getDecorView().setSystemUiVisibility(f);
-        }
+        try {
+            View decor = getWindow().getDecorView();
+            if (Build.VERSION.SDK_INT >= 30) {
+                WindowInsetsController c = decor.getWindowInsetsController();
+                if (c == null) return;
+                int both = WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS | WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS;
+                c.setSystemBarsAppearance(lightBars ? both : 0, both);
+            } else {
+                int f = View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+                if (lightBars) f |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+                decor.setSystemUiVisibility(f);
+            }
+        } catch (Exception ignored) {}
     }
 
     private void pushInsets() {
