@@ -235,10 +235,25 @@ $("#main").addEventListener("scroll", e => $("#screen").classList.toggle("scroll
 L.apply();
 $("#f-lang").textContent = L.LANG_NAMES[L.lang];
 setTimeMode("exact");
-load(); applySkin(); UI.starfield();
+// ?demo=today (or week, me, systems) shows a made-up person without touching anything saved, for
+// tools/screenshots.sh. Also &look=ocean, &sys=native for a system page and &at=.reading to scroll to a card.
+const demo = new URLSearchParams(location.search);
+const DEMO = /^(today|week|me|systems)$/.test(demo.get("demo") || "") ? demo.get("demo") : null;
+if(DEMO){
+  S.profile = {birthName:"Ada Maria Nowak", name:"Ada", date:"1995-06-10", timeMode:"exact", time:"14:30", timeSpread:0,
+    place:{name:"Gliwice, Silesia, Poland", lat:50.2945, lon:18.6714, tz:"Europe/Warsaw"}};
+  if(LOOK_TOP[demo.get("look")]) S.settings.skin = demo.get("look");
+  save = () => {};
+}else load();
+applySkin(); UI.starfield();
 addEventListener("resize", () => UI.starfield());
 if(S.profile) showApp();
 else { $("#onboard").classList.add("on"); $("#f-date").max = new Date().toISOString().slice(0,10); }
+if(DEMO){
+  go(DEMO, demo.get("sys"));
+  const el = demo.get("at") && document.querySelector("#v-" + DEMO + " " + demo.get("at")), m = $("#main");
+  if(el) m.scrollTop += el.getBoundingClientRect().top - m.getBoundingClientRect().top - 14;
+}
 
 // offline copy for the web version (the Android app already has the files built in)
 if("serviceWorker" in navigator && location.protocol === "https:" && location.hostname !== "appassets.androidplatform.net"){

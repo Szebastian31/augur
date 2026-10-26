@@ -14,6 +14,7 @@ const LOCALE = {no:"nb"};
 window.I18N = window.I18N || {};
 
 let LANG = (function(){
+  const q = (location.search.match(/[?&]lang=([a-z]{2})/) || [])[1]; if(q && LANG_NAMES[q]) return q;   // screenshots: ?lang=pl
   try{ const s = localStorage.getItem(KEY); if(s && LANG_NAMES[s]) return s; }catch(e){}
   let n = (navigator.language || "en").slice(0,2).toLowerCase();
   if(n === "nb" || n === "nn") n = "no";   // Norwegian Bokmål / Nynorsk

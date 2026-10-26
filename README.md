@@ -1,21 +1,12 @@
 # Augur
 
-<p align="center"><img src="icons/icon.png" width="160" alt="Augur app icon"></p>
+<p align="center"><img src="screenshots/banner.png" alt="Augur on five phones: the week ahead, your day, today's agreement ring, the Systems page and Me"></p>
 
 <p align="center"><b>Your stars, six ways, and where they agree.</b></p>
 
 <p align="center"><a href="https://github.com/Szebastian31/augur/releases/latest"><img src="https://img.shields.io/badge/Download%20APK-Android-1f2e78?style=for-the-badge&logo=android&logoColor=white" alt="Download APK"></a> <a href="https://szebastian31.github.io/augur/"><img src="https://img.shields.io/badge/Open%20in%20browser-iPhone%20%26%20web-6b4f9a?style=for-the-badge" alt="Open Augur"></a></p>
 
-No app store, no account, no ads. Get the **Android app**, or use Augur in any phone's browser.
-
-<p align="center">
-<img src="screenshots/today.svg" width="24%" alt="Today: the agreement ring, today's tone and a reading built from today's sky">
-<img src="screenshots/me.svg" width="24%" alt="Me: Sun, Moon and Rising, and the traits the systems agree on">
-<img src="screenshots/chart.svg" width="24%" alt="Western birth chart wheel with planets and aspects">
-<img src="screenshots/wheel.svg" width="24%" alt="Native American Medicine Wheel with your birth totem">
-</p>
-
-<p align="center"><sub>Today · Me · Birth chart · Medicine Wheel</sub></p>
+No app store, no account, no ads. Get the **Android app**, or use Augur in any phone's browser. Everything stays on your phone.
 
 ---
 
@@ -25,6 +16,37 @@ No app store, no account, no ads. Get the **Android app**, or use Augur in any p
 
 ---
 
+## What's inside
+
+- **☀️ Today:** a friendly reading built from the real sky today measured against *your* chart, not a generic one for your sign. It opens with how the day feels, then what the planets are doing, then two short lines: what the day is good for and what to go easy on. Star ratings for love, work, energy and mood, a lucky colour and number, and a quote of the day.
+- **⚖️ Where the systems agree:** like Consensus Weather averaging seven forecast models, Western (the Moon in your houses), Chinese (today's day pillar against your Day Master), Numerology (your Personal Day) and Mayan (today's day sign) each vote for today's tone, such as *Reach out* or *Slow down*. The ring shows how many agree, and tapping it shows why.
+- **📅 Week:** the week ahead, day by day. Its overall energy (building, winding down or steady, and its best day), the moments worth knowing (new and full Moons, Mercury turning, planets changing sign), and how it looks for love, work, money, health, home, friends and growth, each with its best day. Tap any day to read it in full.
+- **✦ Me:** your Sun, Moon and rising sign, the traits the six systems agree on (and how many of them do), and the one where they disagree.
+- **◎ Systems:** all six at a glance, each tile already showing your sign, totem, animal or number. Tap one, or swipe sideways to move between them.
+  - **Western:** chart wheel, planets in signs and houses, aspects, element balance. Placidus, Whole Sign, Equal or Porphyry houses.
+  - **Native American:** the Medicine Wheel. Your birth totem and its moon, plant, mineral and colour, your elemental clan (Turtle, Frog, Thunderbird or Butterfly) and your spirit keeper direction.
+  - **Chinese:** your zodiac animal and element (by Lunar New Year), the Four Pillars (Ba Zi), your Day Master, element balance, best matches and clashes.
+  - **Numerology:** Life Path, Expression, Soul Urge, Personality, Birthday, Maturity, and your Personal Year, Month and Day.
+  - **Egyptian:** your god of the Egyptian zodiac (one of twelve, from Nile to Sekhmet) in a cartouche, with its gift, its shadow, your days and best matches.
+  - **Mayan:** your day sign (nawal) and number from the 260-day sacred calendar, in the traditional K'iche' count first, and in Dreamspell with your Kin and its oracle (guide, support, challenge and hidden power).
+- **🎨 Six looks,** the same as Kalendae: Night, Dawn, Aurora, Ocean, Midnight and Paper. The sky runs edge to edge, behind the status bar.
+- **🌍 33 languages,** the same set as Consensus Weather: English, Polish, German, Ukrainian, Spanish, French, Russian, Chinese, Japanese, Portuguese, Dutch, Italian, Hindi, Arabic, Greek, Czech, Swedish, Korean, Indonesian, Bengali, Turkish, Telugu, Romanian, Hungarian, Finnish, Norwegian, Slovak, Swahili, Persian, Danish, Thai, Vietnamese and Bulgarian. Augur opens in your phone's language and falls back to English; you can change it in Profile. Arabic and Persian read right to left.
+
+## Screens
+
+<p align="center">
+<img src="screenshots/today.png" width="32%" alt="Today: the agreement ring and today's tone">
+<img src="screenshots/day.png" width="32%" alt="Your day: the reading, what the day is good for and what to go easy on">
+<img src="screenshots/week.png" width="32%" alt="The week ahead, day by day">
+</p>
+<p align="center">
+<img src="screenshots/me.png" width="32%" alt="Me: Sun, Moon and Rising, and the traits the systems agree on">
+<img src="screenshots/systems.png" width="32%" alt="Systems: all six at a glance, and the Western birth chart wheel">
+<img src="screenshots/wheel.png" width="32%" alt="Native American Medicine Wheel with your birth totem">
+</p>
+
+<p align="center"><sub>Today · Your day · Week · Me · Birth chart · Medicine Wheel</sub></p>
+
 ## Getting started
 
 ### Android app (recommended)
@@ -33,26 +55,12 @@ No app store, no account, no ads. Get the **Android app**, or use Augur in any p
 2. Open the file. If Android asks, allow your browser to **install unknown apps**.
 3. Open Augur and fill in your birth details once.
 
+Works on Android 10 and newer, up to Android 16.
+
 ### iPhone or any browser
 
 1. Open **[szebastian31.github.io/augur](https://szebastian31.github.io/augur/)**.
 2. **iPhone (Safari):** tap **Share**, then **Add to Home Screen**. **Android (Chrome):** tap **⋮**, then **Install app**.
-
-## What's inside
-
-- **☀️ Today:** a friendly reading built from the real sky today measured against *your* chart, not a generic one for your sign: how the day feels, what it's good for and what to go easy on. Star ratings for love, work, energy and mood, a lucky colour and number, and a quote of the day.
-- **⚖️ Where the systems agree:** like Consensus Weather averaging seven forecast models, Western (the Moon in your houses), Chinese (today's day pillar against your Day Master), Numerology (your Personal Day) and Mayan (today's day sign) each vote for today's tone, such as *Reach out* or *Slow down*. The ring shows how many agree, and tapping it shows why.
-- **📅 Week:** the week ahead, day by day. Its overall energy (building, winding down or steady, and its best day), the moments worth knowing (new and full Moons, Mercury turning, planets changing sign), and how it looks for love, work, money, health, home, friends and growth, each with its best day. Tap any day to read it in full.
-- **✦ Me:** your Sun, Moon and rising sign, the traits the six systems agree on (and how many of them do), and the one where they disagree.
-- **◎ Systems:**
-  - **Western:** chart wheel, planets in signs and houses, aspects, element balance. Placidus, Whole Sign, Equal or Porphyry houses.
-  - **Native American:** the Medicine Wheel. Your birth totem and its moon, plant, mineral and colour, your elemental clan (Turtle, Frog, Thunderbird or Butterfly) and your spirit keeper direction.
-  - **Chinese:** your zodiac animal and element (by Lunar New Year), the Four Pillars (Ba Zi), your Day Master, element balance, best matches and clashes.
-  - **Numerology:** Life Path, Expression, Soul Urge, Personality, Birthday, Maturity, and your Personal Year, Month and Day.
-  - **Egyptian:** your god of the Egyptian zodiac (one of twelve, from Nile to Sekhmet) in a cartouche, with its gift, its shadow, your days and best matches.
-  - **Mayan:** your day sign (nawal) and number from the 260-day sacred calendar, in the traditional K'iche' count first, and in Dreamspell with your Kin and its oracle (guide, support, challenge and hidden power).
-- **🎨 Profile:** six looks (Night, Dawn, Aurora, Ocean, Midnight, Paper), house system, language, and deleting all your data.
-- **🌍 33 languages,** the same set as Consensus Weather: English, Polish, German, Ukrainian, Spanish, French, Russian, Chinese, Japanese, Portuguese, Dutch, Italian, Hindi, Arabic, Greek, Czech, Swedish, Korean, Indonesian, Bengali, Turkish, Telugu, Romanian, Hungarian, Finnish, Norwegian, Slovak, Swahili, Persian, Danish, Thai, Vietnamese and Bulgarian. Augur opens in your phone's language and falls back to English; you can change it in Profile. Arabic and Persian read right to left.
 
 ## An honest note about accuracy
 
@@ -74,17 +82,17 @@ Found a bug? [Open an issue](https://github.com/Szebastian31/augur/issues) and d
 
 ---
 
-_Augur is Latin for a Roman priest who read the signs in the sky. It's a sibling to Consensus Weather, Fidelis, Vestis, Caelum and Hora._
+_Augur is Latin for a Roman priest who read the signs in the sky. It's a sibling to Consensus Weather, Kalendae, Fidelis, Vestis, Caelum and Hora._
 
 <details>
 
 <summary>For developers</summary>
 
-The interface is plain HTML, CSS and JavaScript, hosted on GitHub Pages. The Android app (`app/`) bundles those same files into a native WebView shell that adds the system share sheet and vibration. GitHub Actions builds the APK on every push and publishes it as a release.
+The interface is plain HTML, CSS and JavaScript, hosted on GitHub Pages. The Android app (`app/`) bundles those same files into a native WebView shell that draws edge to edge and adds the system share sheet and vibration. It targets Android 16 (API 36) and handles back through the new back callback, keeping `onBackPressed` for Android 15 and older. GitHub Actions builds the APK on every push and publishes it as a release.
 
 | File | What it does |
 | --- | --- |
-| `index.html` | Layout, styles and the first-open form |
+| `index.html` | Layout, styles, the six looks and the first-open form |
 | `astro.js` | Astronomy: Sun, Moon, planets to Pluto, lunar node, ΔT, sidereal time (based on Caelum's) |
 | `chart.js` | Birth time → UTC with time-zone history, Ascendant/MC, houses, aspects, rising-sign certainty |
 | `native.js` | Medicine Wheel totems, clans and spirit keepers |
@@ -100,11 +108,13 @@ The interface is plain HTML, CSS and JavaScript, hosted on GitHub Pages. The And
 | `ui.js`, `draw.js`, `systems.js`, `app.js` | Screens, chart drawings, settings and navigation |
 | `manifest.webmanifest`, `sw.js` | Home-screen install and offline cache |
 | `icons/` | App icon: `icon.png` (1024 px) is the master, the other sizes are made from it with `sips` |
-| `screenshots/` | The mockups above |
-| `app/` | Android app: WebView shell, share sheet, vibration, launcher icon |
+| `tools/screenshots.sh` | Makes everything in `screenshots/` from the real app with a made-up person |
+| `app/` | Android app: WebView shell, edge to edge, share sheet, vibration, launcher icon |
 | `.github/workflows/build.yml` | Builds the APK and publishes it as a release |
 
 After changing any file, bump `VERSION` in `sw.js` so installed web copies update, and `versionName` + `versionCode` in `app/build.gradle` for a new APK release. If you add a `.js` file, add it to `index.html`, `sw.js` and the `copyWebApp` list in `app/build.gradle`. A new text goes into `i18n/en.js` first; other languages show the English until they get their own line.
+
+**Screenshots:** `tools/screenshots.sh` (or `tools/screenshots.sh pl dawn` for Polish in the Dawn look). It needs Google Chrome and touches none of your own data. Without it, `index.html?demo=today&look=ocean` shows the same made-up person in any browser (`demo=week`, `me` or `systems`, with `&sys=native` for one system).
 
 </details>
 
