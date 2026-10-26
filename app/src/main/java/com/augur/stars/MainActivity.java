@@ -14,6 +14,7 @@ import android.view.WindowInsets;
 import android.view.WindowInsetsController;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
+import android.webkit.RenderProcessGoneDetail;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
@@ -121,6 +122,26 @@ public class MainActivity extends Activity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 pushInsets();
+            }
+
+            // If the page's renderer dies, Android closes the whole app unless we handle it here, and no Java
+            // error is raised, so the crash screen would never see it. Write it down and show it instead.
+            @Override
+            public boolean onRenderProcessGone(WebView view, RenderProcessGoneDetail detail) {
+                try (FileOutputStream o = new FileOutputStream(crash)) {
+                    String head = "Augur " + appVersion() + " · Android " + Build.VERSION.RELEASE + " (API " + Build.VERSION.SDK_INT + ") · " + Build.MANUFACTURER + " " + Build.MODEL + "\n\n";
+                    String why = detail.didCrash() ? "The WebView's page renderer crashed." : "The system stopped the WebView's page renderer (usually to free memory).";
+                    String wv = "";
+                    try { android.content.pm.PackageInfo p = WebView.getCurrentWebViewPackage(); if (p != null) wv = "\nWebView: " + p.packageName + " " + p.versionName; } catch (Exception ignored) {}
+                    o.write((head + why + wv + "\n").getBytes(StandardCharsets.UTF_8));
+                } catch (Exception ignored) {}
+                if (web == view && web != null) {
+                    try { ((android.view.ViewGroup) web.getParent()).removeView(web); } catch (Exception ignored) {}
+                    web.destroy();
+                    web = null;
+                }
+                recreate();
+                return true;
             }
         });
 
