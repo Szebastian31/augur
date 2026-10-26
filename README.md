@@ -51,7 +51,7 @@ No app store, no account, no ads. Get the **Android app**, or use Augur in any p
   - **Numerology:** Life Path, Expression, Soul Urge, Personality, Birthday, Maturity, and your Personal Year, Month and Day.
   - **Egyptian:** your god of the Egyptian zodiac (one of twelve, from Nile to Sekhmet) in a cartouche, with its gift, its shadow, your days and best matches.
   - **Mayan:** your day sign (nawal) and number from the 260-day sacred calendar, in the traditional K'iche' count first, and in Dreamspell with your Kin and its oracle (guide, support, challenge and hidden power).
-- **🎨 Profile:** three looks (Night, Dawn, Paper), house system, language, and deleting all your data.
+- **🎨 Profile:** six looks (Night, Dawn, Aurora, Ocean, Midnight, Paper), house system, language, and deleting all your data.
 - **🌍 33 languages,** the same set as Consensus Weather: English, Polish, German, Ukrainian, Spanish, French, Russian, Chinese, Japanese, Portuguese, Dutch, Italian, Hindi, Arabic, Greek, Czech, Swedish, Korean, Indonesian, Bengali, Turkish, Telugu, Romanian, Hungarian, Finnish, Norwegian, Slovak, Swahili, Persian, Danish, Thai, Vietnamese and Bulgarian. Augur opens in your phone's language and falls back to English; you can change it in Profile. Arabic and Persian read right to left.
 
 ## An honest note about accuracy

@@ -125,9 +125,12 @@ function readingNow(d){
   const good = order.filter(k => d.ratings[k] >= 4).slice(0,2);
   if(!good.length) good.push({push:"energy", connect:"social", create:"mood", steady:"work", reflect:"mood"}[tone]);
   const low = order[order.length-1];
-  let tip = `<b>${t("dGood")}</b> ${L.list(good.map(k => t("goodFor." + k)))}.`;
-  if(d.ratings[low] <= 2) tip += ` <b>${t("dEasy")}</b> ${t("goEasy." + low)}.`;
+  const goodText = L.list(good.map(k => t("goodFor." + k))), easyText = d.ratings[low] <= 2 ? t("goEasy." + low) : "";
+  let tip = `<b>${t("dGood")}</b> ${goodText}.`;
+  if(easyText) tip += ` <b>${t("dEasy")}</b> ${easyText}.`;
   p.push(tip);
+  // the same advice in pieces, so Today can lay it out as two short rows (sharing keeps the sentence)
+  p.tip = {at:p.length - 1, good:goodText, easy:easyText};
   for(const g of d.ingress) p.push(t("dIngress", {p:PLANETS[g.k].name, sign:SIGNS[g.sign].name}));
   return p;
 }

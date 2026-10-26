@@ -1,5 +1,5 @@
 // Augur offline cache. Bump VERSION whenever you change a file so phones pick up the update.
-const VERSION = "augur-v8";
+const VERSION = "augur-v9";
 const LANGS = ["en","pl","de","uk","es","fr","ru","zh","ja","pt","nl","it","hi","ar","el","cs","sv","ko","id","bn","tr","te","ro","hu","fi","no","sk","sw","fa","da","th","vi","bg"];
 const FILES = ["./","index.html","i18n.js",...LANGS.map(l => `i18n/${l}.js`),"astro.js","chart.js","native.js","chinese.js","numerology.js","egyptian.js","mayan.js","texts.js","quotes.js","consensus.js","daily.js","week.js",
   "ui.js","draw.js","systems.js","app.js","manifest.webmanifest","icons/icon-192.png","icons/icon-512.png","icons/icon-maskable-512.png","icons/apple-touch-icon.png"];

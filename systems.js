@@ -6,27 +6,48 @@ const {SIGNS, PLANETS, signOf, fmtDeg, HOUSE_SYSTEMS} = Chart;
 const {SIGN_TEXT, PLANET_TEXT, HOUSE_TEXT} = Texts;
 const {$, esc, sheet, dateFmt} = UI;
 const t = L.t;
-let current = "western";
+let current = "western", last = null;
 const TABS = [["western","sysWestern"],["native","sysNative"],["chinese","sysChinese"],["numerology","sysNumerology"],["egyptian","sysEgyptian"],["mayan","sysMayan"]];
 
-function render(S, which){
+// your mark in each system, so the picker already tells you something before you tap
+function marks(S){
+  return {western:SIGNS[signOf(S.chart.points.sun.lon)].glyph, native:S.wheel.totem.icon, chinese:S.chi.animal.han,
+    numerology:S.num.lifePath, egyptian:Draw.ankh(20), mayan:Draw.mayaNumber(S.maya.traditional.number, 20)};
+}
+
+function render(S, which, quiet){
   if(which) current = which;
-  const body = {western, native, chinese, numerology, egyptian, mayan}[current](S);
+  last = S;
+  // switching inside the page only animates the new page, not the title and picker above it
+  $("#v-systems").classList.toggle("switch", !!quiet);
+  const body = {western, native, chinese, numerology, egyptian, mayan}[current](S), m = marks(S);
   $("#v-systems").innerHTML = `<div class="top"><div><div class="date">${Daily.own("sixWays") ? t("sixWays") : t("fourWays")}</div><h1>${t("systemsTitle")}</h1></div></div>
-    <div class="tabs">${TABS.map(([k,n])=>`<button data-k="${k}" class="${k===current?"on":""}">${t(n)}</button>`).join("")}</div>${body}`;
-  document.querySelectorAll("#v-systems .tabs button").forEach(b => b.onclick = () => { render(S, b.dataset.k); UI.buzz("8"); UI.toTop(); });
+    <div class="picker">${TABS.map(([k,n])=>`<button type="button" data-k="${k}" class="${k===current?"on":""}"><span class="pk-m">${m[k]}</span><span class="pk-n">${t(n)}</span></button>`).join("")}</div>
+    <div class="sys-body">${body}</div>`;
+  document.querySelectorAll("#v-systems .picker button").forEach(b => b.onclick = () => { if(b.dataset.k !== current){ render(S, b.dataset.k, true); UI.buzz("8"); } });
   document.querySelectorAll("#v-systems [data-planet]").forEach(el => el.onclick = () => planetSheet(S, el.dataset.planet));
   document.querySelectorAll("#v-systems [data-num]").forEach(el => el.onclick = () => numberSheet(S, el.dataset.num));
   document.querySelectorAll("#v-systems [data-totem]").forEach(el => el.onclick = () => totemSheet(+el.dataset.totem));
   document.querySelectorAll("#v-systems [data-god]").forEach(el => el.onclick = () => godSheet(+el.dataset.god));
-  // centre the chosen tab by scrolling the tab row only (scrollIntoView would also scroll the
-  // screen behind it sideways and cut the page off); measured on screen so it works right-to-left too
-  const row = document.querySelector("#v-systems .tabs"), on = row && row.querySelector(".on");
-  if(on){
-    const r = row.getBoundingClientRect(), b = on.getBoundingClientRect();
-    row.scrollLeft += (b.left + b.width/2) - (r.left + r.width/2);
-  }
 }
+
+// swipe sideways on a system page to move to the next one (mirrored for right-to-left languages)
+function step(dir){
+  const i = TABS.findIndex(([k]) => k === current), n = TABS[(i + dir + TABS.length) % TABS.length][0];
+  render(last, n, true); UI.buzz("8");
+  const p = document.querySelector("#v-systems .picker"), m = $("#main");
+  if(p && m && m.scrollTop > p.offsetTop) m.scrollTop = p.offsetTop - 8;
+}
+let sx = null, sy = 0;
+const view = $("#v-systems");
+view.addEventListener("touchstart", e => { const tt = e.touches[0]; sx = e.target.closest("table,.wheel,svg") ? null : tt.clientX; sy = tt.clientY; }, {passive:true});
+view.addEventListener("touchend", e => {
+  if(sx === null || !last) return;
+  const tt = e.changedTouches[0], dx = tt.clientX - sx, dy = tt.clientY - sy; sx = null;
+  if(Math.abs(dx) < 70 || Math.abs(dy) > Math.abs(dx) * .6) return;
+  const rtl = document.documentElement.dir === "rtl";
+  step((dx < 0) !== rtl ? 1 : -1);
+}, {passive:true});
 
 // shared pieces: the headline card, a row of fact chips, and a section that folds open
 const hero = (kicker, art, title, sub, text) => `<div class="card sys-hero">${art ? `<div class="sys-art">${art}</div>` : ""}

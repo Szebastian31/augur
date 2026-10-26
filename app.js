@@ -219,7 +219,17 @@ function renderProfile(){
     $("#p-really").onclick = () => { try{ localStorage.removeItem(KEY); }catch(e){} location.reload(); };
   };
 }
-function applySkin(){ $("#screen").className = "screen " + (S.settings.skin === "night" ? "" : S.settings.skin); }
+// the six looks, same as Kalendae's; the sky colour also tints the browser bar, and Paper asks
+// Android for dark status bar icons
+const LOOK_TOP = {night:"#120a2e", dawn:"#2a1b6a", aurora:"#03141a", ocean:"#021222", midnight:"#000000", paper:"#f7f1e6"};
+function applySkin(){
+  const look = LOOK_TOP[S.settings.skin] ? S.settings.skin : "night";
+  $("#screen").dataset.look = look;
+  document.querySelector('meta[name="theme-color"]').content = LOOK_TOP[look];
+  try{ window.AugurNative && AugurNative.setBars && AugurNative.setBars(look === "paper"); }catch(e){}
+}
+// a strip of glass fades in behind the status bar once the page scrolls under it
+$("#main").addEventListener("scroll", e => $("#screen").classList.toggle("scrolled", e.target.scrollTop > 6), {passive:true});
 
 // ---- start
 L.apply();

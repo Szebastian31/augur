@@ -49,6 +49,16 @@ function agreeRing(votes, tone){
 }
 
 // ---- Today
+// the day's reading: the opening line larger, then the sky in plain paragraphs, and the advice
+// as two short rows instead of one long sentence (languages with the older reading keep paragraphs)
+function dayText(r){
+  if(!r.tip) return r.map(p => `<p>${p}</p>`).join("");
+  const lab = k => t(k).replace(/\s*[:：]\s*$/, "");
+  const rest = r.filter((_, i) => i !== r.tip.at);
+  return `<p class="lead">${rest[0]}</p>${rest.slice(1).map(p => `<p>${p}</p>`).join("")}
+    <div class="dos"><div class="do good"><span>${lab("dGood")}</span><b>${r.tip.good}</b></div>
+      ${r.tip.easy ? `<div class="do easy"><span>${lab("dEasy")}</span><b>${r.tip.easy}</b></div>` : ""}</div>`;
+}
 function renderToday(S){
   const d = S.day, c = d.consensus, tone = TONES[c.tone], q = Quotes.quoteFor(new Date());
   const first = (S.profile.name || S.profile.birthName).split(" ")[0];
@@ -73,10 +83,10 @@ function renderToday(S){
     </div>
     <div class="card" id="t-votes" style="display:none">${voteRows}</div>
 
-    <div class="card reading">
+    <div class="card reading day">
       <div class="label"><span>${t("yourDay")}</span><span>${sun.glyph} ${sun.name}</span></div>
-      ${d.reading.map(p=>`<p>${p}</p>`).join("")}
-      <div class="row" style="margin-top:12px"><button class="btn small ghost" id="t-share">${t("share")}</button></div>
+      ${dayText(d.reading)}
+      <button class="btn small ghost share-btn" id="t-share">${t("share")}</button>
     </div>
 
     <div class="card tap week-teaser" id="t-week">
@@ -151,7 +161,7 @@ function daySheet(S, i){
   const R = d.ratings, rat = (k, lab) => `<div class="r"><span>${t(lab)}</span><div class="bar"><i style="width:${R[k]*20}%"></i></div><span class="small">${R[k]}</span></div>`;
   sheet(`<div class="kicker">${dateFmt(d.date, {weekday:"long", day:"numeric", month:"long"})}</div>
     <h2>${TONES[d.consensus.tone].name}</h2>
-    <div class="card reading">${d.reading.map(p=>`<p>${p}</p>`).join("")}</div>
+    <div class="card reading day">${dayText(d.reading)}</div>
     <div class="card ratings">${rat("love","rLove")}${rat("work","rWork")}${rat("energy","rEnergy")}${rat("mood","rMood")}</div>`);
 }
 

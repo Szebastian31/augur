@@ -4,14 +4,14 @@ plugins {
 
 android {
     namespace 'com.augur.stars'
-    compileSdk 34
+    compileSdk 36
 
     defaultConfig {
         applicationId "com.augur.stars"
         minSdk 29
-        targetSdk 34
-        versionCode 8
-        versionName "1.4.3"
+        targetSdk 36
+        versionCode 9
+        versionName "1.4.4"
     }
 
     buildTypes {
