@@ -10,17 +10,28 @@ android {
         applicationId "com.augur.stars"
         minSdk 29
         targetSdk 36
-        versionCode 13
-        versionName "1.5.0"
+        versionCode 14
+        versionName "1.5.1"
     }
 
+    // One fixed key (debug.keystore, the family key Kalendae and Fidelis use), so every new APK installs over the old one.
+    def fixedKey = rootProject.file("debug.keystore")
+    signingConfigs {
+        debug {
+            if (fixedKey.exists()) {
+                storeFile fixedKey
+                storePassword "fidelis123"
+                keyAlias "fidelis"
+                keyPassword "fidelis123"
+            }
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
         }
         debug {
-            // debug builds are signed with the auto-generated debug key,
-            // which is all that's needed to sideload onto a personal phone.
+            signingConfig signingConfigs.debug
         }
     }
 
