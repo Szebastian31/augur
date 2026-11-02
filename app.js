@@ -27,7 +27,19 @@ function compute(){
   S.day = Daily.day(S.profile, S.chart, S.chi);
   S.week = Week.week(S.profile, S.chart, S.chi);
   S.dayKey = todayKey();
+  shareWithAnnales();
 }
+// Annales, the stamp journal, shows today's tone on its postmark. In the Android app the page hands it to the
+// shell (window.AnnalesShare), which keeps it on the phone and answers only Annales. In a browser, nothing happens.
+function shareWithAnnales(){
+  try{
+    if(!window.AnnalesShare || !S.day || !S.day.consensus) return;
+    const c = S.day.consensus, d = new Date(), p = n => String(n).padStart(2, "0");
+    const iso = `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;
+    AnnalesShare.put(iso, JSON.stringify({"augur.tone": Texts.TONES[c.tone].name, "augur.agree": `${c.count} of ${c.of}`}));
+  }catch(e){}
+}
+
 function renderAll(){
   try{
     compute();

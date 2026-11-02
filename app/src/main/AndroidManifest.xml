@@ -25,5 +25,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- Shares each day's tone with Annales, the stamp journal. Read-only; answers Annales only. -->
+        <provider android:name=".AnnalesProvider" android:authorities="com.augur.stars.annales" android:exported="true" />
     </application>
 </manifest>

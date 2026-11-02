@@ -146,6 +146,7 @@ public class MainActivity extends Activity {
         });
 
         web.addJavascriptInterface(new Bridge(), "AugurNative");
+        web.addJavascriptInterface(new AnnalesShare(this), "AnnalesShare"); // today's tone, for Annales
 
         // Android 16 no longer calls onBackPressed for apps targeting it; back arrives here instead
         if (Build.VERSION.SDK_INT >= 33) try {
