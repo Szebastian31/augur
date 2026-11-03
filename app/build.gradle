@@ -10,8 +10,8 @@ android {
         applicationId "com.augur.stars"
         minSdk 29
         targetSdk 36
-        versionCode 14
-        versionName "1.5.1"
+        versionCode 15
+        versionName "1.6.0"
     }
 
     // One fixed key (debug.keystore, the family key Kalendae and Fidelis use), so every new APK installs over the old one.
