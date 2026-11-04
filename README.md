@@ -19,7 +19,7 @@ No app store, no account, no ads. Get the **Android app**, or use Augur in any p
 ## What's inside
 
 - **☀️ Today:** a friendly reading built from the real sky today measured against *your* chart, not a generic one for your sign. It opens with how the day feels, then what the planets are doing, then two short lines: what the day is good for and what to go easy on. Star ratings for love, work, energy and mood, a lucky colour and number, and a quote of the day.
-- **⚖️ Where the systems agree:** like Consensus Weather averaging seven forecast models, Western (the Moon in your houses), Chinese (today's day pillar against your Day Master), Numerology (your Personal Day) and Mayan (today's day sign) each vote for today's tone, such as *Reach out* or *Slow down*. The ring shows how many agree, and tapping it shows why.
+- **⚖️ Where the systems agree:** like Consensus Weather averaging thirteen forecast models, Western (the Moon in your houses), Chinese (today's day pillar against your Day Master), Numerology (your Personal Day) and Mayan (today's day sign) each vote for today's tone, such as *Reach out* or *Slow down*. The ring shows how many agree, and tapping it shows why.
 - **📅 Week:** the week ahead, day by day. Its overall energy (building, winding down or steady, and its best day), the moments worth knowing (new and full Moons, Mercury turning, planets changing sign), and how it looks for love, work, money, health, home, friends and growth, each with its best day. Tap any day to read it in full.
 - **✦ Me:** your Sun, Moon and rising sign, the traits the six systems agree on (and how many of them do), and the one where they disagree.
 - **◎ Systems:** all six at a glance, each tile already showing your sign, totem, animal or number. Tap one, or swipe sideways to move between them.
@@ -80,9 +80,13 @@ Everything stays on your phone. Your name, birth date, time and place are saved 
 
 Found a bug? [Open an issue](https://github.com/Szebastian31/augur/issues) and describe what happened, which phone you use and which browser.
 
+## License
+
+Released under the [MIT License](LICENSE).
+
 ---
 
-_Augur is Latin for a Roman priest who read the signs in the sky. It's a sibling to Consensus Weather, Kalendae, Fidelis, Vestis, Caelum and Hora._
+_Augur is Latin for a Roman priest who read the signs in the sky. It's a sibling to Hora, Consensus Weather, Annales, Kalendae, Caelum and Fidelis, all one tap away in [Hub](https://github.com/Szebastian31/hub)._
 
 <details>
 
@@ -111,6 +115,8 @@ The interface is plain HTML, CSS and JavaScript, hosted on GitHub Pages. The And
 | `tools/screenshots.sh` | Makes everything in `screenshots/` from the real app with a made-up person |
 | `app/` | Android app: WebView shell, edge to edge, share sheet, vibration, launcher icon |
 | `.github/workflows/build.yml` | Builds the APK and publishes it as a release |
+
+**Signing.** Builds are signed with the family key. It never lives in git: GitHub builds read it from the `FAMILY_*` secrets, local builds from `~/.gradle/gradle.properties`. Every build installs over the last one.
 
 After changing any file, bump `VERSION` in `sw.js` so installed web copies update, and `versionName` + `versionCode` in `app/build.gradle` for a new APK release. If you add a `.js` file, add it to `index.html`, `sw.js` and the `copyWebApp` list in `app/build.gradle`. A new text goes into `i18n/en.js` first; other languages show the English until they get their own line.
 
