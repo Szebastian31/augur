@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- only apps signed with the family key may read the day summaries -->
+    <permission
+        android:name="com.szebastian.family.READ_DAY"
+        android:protectionLevel="signature" />
+
     <!-- only used for the birthplace search (the city name you type) -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -26,6 +31,7 @@
             </intent-filter>
         </activity>
         <!-- Shares each day's tone with Annales, the stamp journal. Read-only; answers Annales only. -->
-        <provider android:name=".AnnalesProvider" android:authorities="com.augur.stars.annales" android:exported="true" />
+        <provider android:name=".AnnalesProvider" android:authorities="com.augur.stars.annales" android:exported="true"
+            android:readPermission="com.szebastian.family.READ_DAY" />
     </application>
 </manifest>
